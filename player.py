@@ -3,9 +3,11 @@ import test
 
 class Player:
     jumpForce = 500
-    acceleration = 25
-    gravityForce = 10
-    frictionForce = 5
+    acceleration = 50
+    gravityForce = 15
+    frictionForce = 25
+    maxSpeed = 250
+    maxFall = 250
     delta = 30
 
     def __init__(self, x, y):
@@ -18,15 +20,25 @@ class Player:
     
     def applyGravity(self):
         self.yVel += Player.gravityForce
+        self.yVel = min(self.yVel, Player.maxFall)
         self.y += self.yVel / Player.delta
     
     def applyAccel(self):
+        if self.xVel < 0:
+            sign = -1
+        else:
+            sign = 1
+        self.xVel = sign * min(abs(self.xVel), Player.maxSpeed)
         self.x += self.xVel / Player.delta
     
     def applyFriction(self):
-        self.xVel -= Player.frictionForce
-        if self.xVel <= 0:
-            self.xVel = 0
+        if self.xVel < 0:
+            sign = 1
+        else:
+            sign = -1
+        if self.xVel != 0:
+            self.xVel += sign * Player.frictionForce
+            self.x += self.xVel / Player.delta
 
     def moveRight(self):
         self.xVel += Player.acceleration
