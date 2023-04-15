@@ -86,6 +86,7 @@ class Player:
                         if self.yVel < 0:
                             self.y = bot
                             self.yVel = 0
+                        return True
     
     def checkXCollide(self, app, tileMap):
         rows, cols = len(tileMap), len(tileMap[0])
@@ -110,3 +111,11 @@ class Player:
                         if self.xVel < 0:
                             self.x = right
                             self.x = 0
+                    return True
+
+    def doStep(self, app, tileMap):
+        app.player.applyAccel()
+        app.player.applyFriction()
+        app.player.checkXCollide(app, app.tileMap)
+        app.player.applyGravity()
+        app.player.checkYCollide(app, app.tileMap)

@@ -31,12 +31,7 @@ def redrawAll(app):
     app.tiles.draw()
 
 def onStep(app):
-    app.player.applyAccel()
-    app.player.applyFriction()
-    app.player.checkXCollide(app, app.tileMap)   
-    app.player.applyGravity()
-    app.player.checkYCollide(app, app.tileMap)  
-# can combine these into a doStep inside player class
+    app.player.doStep(app, app.tileMap)
 
 def onKeyPress(app, key):
     if key == 'space':
