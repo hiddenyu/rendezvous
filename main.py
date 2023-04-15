@@ -7,38 +7,35 @@
 from cmu_graphics import *
 from PIL import Image
 from player import Player
+from tile import Tile
 import math, copy, time
+# time for timed events later on
 
 def onAppStart(app):
     app.stepsPerSecond = Player.delta
     app.width, app.height = 1920, 1080
-    app.player = Player(1000, 0)
-    app.tileSize = 120
+    app.player = Player(300, 0)
     app.tileMap = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                   [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                    [0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],]
+                   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    app.tiles = Tile(app.tileMap)
 
 def redrawAll(app):
-    drawImage(app.player.sprite, app.player.x, app.player.y)
-    for row in range(len(app.tileMap)):
-        for col in range(len(app.tileMap[0])):
-            if app.tileMap[row][col] != 0:
-                drawRect(app.tileSize*col, app.tileSize*row, app.tileSize,
-                         app.tileSize, fill='red')
-# can make a draw function inside player class to do this
+    app.player.draw()
+    app.tiles.draw()
 
 def onStep(app):
     app.player.applyAccel()
     app.player.applyFriction()
+    app.player.checkXCollide(app, app.tileMap)   
     app.player.applyGravity()
-    app.player.checkCollisions(app, app.tileMap)
-    
+    app.player.checkYCollide(app, app.tileMap)  
 # can combine these into a doStep inside player class
 
 def onKeyPress(app, key):
