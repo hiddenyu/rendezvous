@@ -104,9 +104,7 @@ class Player:
                 if not (playerTop > bot or playerBot < top):
                     if (playerLeft >= right and playerRight <= left and 
                         tileMap[row][col] != 0):
-                        print('collision', left, top)
                         if self.xVel > 0:
-                            print('x collide')
                             self.x = left - self.width
                             self.x = 0
                         if self.xVel < 0:
