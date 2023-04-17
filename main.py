@@ -6,8 +6,8 @@
 
 from cmu_graphics import *
 from PIL import Image
-from player import Player
-from tile import Tile
+from player import *
+from tile import *
 import math, copy, time
 # time for timed events later on
 
@@ -25,6 +25,7 @@ def onAppStart(app):
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     app.tiles = Tile(app.tileMap)
+    app.onGround = False
 
 def redrawAll(app):
     app.player.draw()
@@ -32,9 +33,13 @@ def redrawAll(app):
 
 def onStep(app):
     app.player.doStep(app, app.tileMap)
+    if app.player.checkYCollide(app, app.tileMap) == True:
+        app.onGround = True
+    else:
+        app.onGround = False
 
 def onKeyPress(app, key):
-    if key == 'space':
+    if key == 'space' and app.onGround:
         app.player.jump()
 
 def onKeyHold(app, keys):

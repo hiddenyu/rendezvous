@@ -2,12 +2,12 @@ from cmu_graphics import *
 from PIL import Image
 
 class Player:
-    jumpForce = 500
-    acceleration = 50
-    gravityForce = 25
-    frictionForce = 25
+    jumpForce = 1000
+    acceleration = 200
+    gravityForce = 100
+    frictionForce = 0.5
     maxSpeed = 500
-    maxFall = 500
+    maxFall = 1000
     delta = 30
 
     def __init__(self, x, y):
@@ -46,12 +46,8 @@ class Player:
         self.x += self.xVel / Player.delta
     
     def applyFriction(self):
-        if self.xVel < 0:
-            sign = 1
-        else:
-            sign = -1
         if self.xVel != 0:
-            self.xVel += sign * Player.frictionForce
+            self.xVel *= Player.frictionForce
             self.x += self.xVel / Player.delta
 
     def moveRight(self):
