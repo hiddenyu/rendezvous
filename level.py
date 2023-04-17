@@ -1,10 +1,10 @@
 from cmu_graphics import *
 from PIL import Image
 
-class Tile:
+class Level:
     def __init__(self, tileMap):
         self.tileMap = tileMap
-        self.tileSize = 120
+        self.tileSize = 60
         self.sprites = None
 
     def draw(self):
