@@ -16,9 +16,10 @@ class Player:
         self.load = [x, y]
         self.xVel = 0
         self.yVel = 0
+        self.abilities = []
         self.sprite = CMUImage(Image.open('test.jpg'))
         self.width, self.height = getImageSize(self.sprite)
-        self.width, self.height = self.width / 5, self.height / 5
+        self.width, self.height = self.width / 3, self.height / 3
     
     # to animate with sprite strip
     # app.sprites = []
@@ -82,7 +83,6 @@ class Player:
                         if playerBot >= top and playerTop <= bot:
                             if self.yVel > 0:
                                 self.y = top - self.height
-                                print(top, self.height, self.y)
                                 self.yVel = 0
                             elif self.yVel < 0:
                                 self.y = bot
@@ -120,9 +120,9 @@ class Player:
 
     def doStep(self, app, tileMap):
         app.player.applyGravity()
-        app.player.checkYCollide(app, app.tileMap)
+        app.player.checkYCollide(app, tileMap)
         app.player.applyAccel()
         app.player.applyFriction()
-        app.player.checkXCollide(app, app.tileMap)
+        app.player.checkXCollide(app, tileMap)
         if app.player.y > app.height:
             app.player.respawn()

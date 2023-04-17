@@ -20,14 +20,17 @@ def onAppStart(app):
     app.tileMaps = Tilemaps()
     app.level = Level(app.tileMaps.tileMap1)
     app.onGround = False
+    app.item = Item(800, 760, 1)
 
 def redrawAll(app):
     app.player.draw()
     app.level.draw()
+    app.item.draw()
 
 def onStep(app):
-    app.player.doStep(app, app.tileMap)
-    if app.player.checkYCollide(app, app.tileMap) == True:
+    app.player.doStep(app, app.tileMaps.tileMap1)
+    app.item.checkCollide(app.player)
+    if app.player.checkYCollide(app, app.tileMaps.tileMap1) == True:
         app.onGround = True
     else:
         app.onGround = False
