@@ -63,6 +63,7 @@ class Player:
     def jump(self):
         self.yVel = -Player.jumpForce
 
+    # collision detection concepts from http://jeffreythompson.org/collision-detection/rect-rect.php
     def checkYCollide(self, app, tileMap):
         rows, cols = len(tileMap), len(tileMap[0])
 
@@ -77,16 +78,16 @@ class Player:
                 playerLeft, playerTop = self.x, self.y
                 playerRight = playerLeft + self.width
                 playerBot = playerTop + self.height
-                if not (playerLeft > right or playerRight < left):
-                    if (playerBot >= top and playerTop <= bot and 
-                        tileMap[row][col] != 0):
-                        if self.yVel > 0:
-                            self.y = top - self.height
-                            self.yVel = 0
-                        if self.yVel < 0:
-                            self.y = bot
-                            self.yVel = 0
-                        return True
+                if tileMap[row][col] != 0:
+                    if not (playerLeft >= right or playerRight <= left):
+                        if playerBot >= top and playerTop <= bot:
+                            if self.yVel > 0:
+                                self.y = top - self.height
+                                self.yVel = 0
+                            elif self.yVel < 0:
+                                self.y = bot
+                                self.yVel = 0
+                            return True
     
     def checkXCollide(self, app, tileMap):
         rows, cols = len(tileMap), len(tileMap[0])
@@ -102,20 +103,20 @@ class Player:
                 playerLeft, playerTop = self.x, self.y
                 playerRight = playerLeft + self.width
                 playerBot = playerTop + self.height
-                if not (playerTop > bot or playerBot < top):
-                    if (playerLeft >= right and playerRight <= left and 
-                        tileMap[row][col] != 0):
-                        if self.xVel > 0:
-                            self.x = left - self.width
-                            self.x = 0
-                        if self.xVel < 0:
-                            self.x = right
-                            self.x = 0
-                    return True
+                if tileMap[row][col] != 0:
+                    if not (playerTop >= bot or playerBot <= top):
+                        if playerRight >= left and playerLeft <= right:
+                            if self.xVel > 0:
+                                self.x = left - self.width
+                                self.xVel = 0
+                            elif self.xVel < 0:
+                                self.x = right
+                                self.xVel = 0
+                            return True
 
     def doStep(self, app, tileMap):
+        app.player.applyGravity()
+        app.player.checkYCollide(app, app.tileMap)
         app.player.applyAccel()
         app.player.applyFriction()
         app.player.checkXCollide(app, app.tileMap)
-        app.player.applyGravity()
-        app.player.checkYCollide(app, app.tileMap)
