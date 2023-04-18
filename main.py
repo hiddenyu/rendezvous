@@ -30,7 +30,7 @@ def redrawAll(app):
 def onStep(app):
     app.player.doStep(app, app.tileMaps.tileMap1)
     app.item.checkCollide(app.player)
-    if app.player.checkYCollide(app, app.tileMaps.tileMap1) == True:
+    if app.player.yVel == 0:
         app.onGround = True
     else:
         app.onGround = False

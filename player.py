@@ -1,4 +1,5 @@
 from cmu_graphics import *
+from physics import *
 from PIL import Image
 
 class Player:
@@ -16,7 +17,9 @@ class Player:
         self.load = [x, y]
         self.xVel = 0
         self.yVel = 0
+        self.collected = []
         self.abilities = []
+        self.completed = False
         self.sprite = CMUImage(Image.open('test.jpg'))
         self.width, self.height = getImageSize(self.sprite)
         self.width, self.height = self.width / 3, self.height / 3
@@ -37,22 +40,13 @@ class Player:
                   height=self.height)
 
     def applyGravity(self):
-        self.yVel += Player.gravityForce
-        self.yVel = min(self.yVel, Player.maxFall)
-        self.y += self.yVel / Player.delta
+        gravity(self, Player.gravityForce, Player.maxFall, Player.delta)
     
     def applyAccel(self):
-        if self.xVel < 0:
-            sign = -1
-        else:
-            sign = 1
-        self.xVel = sign * min(abs(self.xVel), Player.maxSpeed)
-        self.x += self.xVel / Player.delta
+        accel(self, Player.maxSpeed, Player.delta)
     
     def applyFriction(self):
-        if self.xVel != 0:
-            self.xVel *= Player.frictionForce
-            self.x += self.xVel / Player.delta
+        friction(self, Player.frictionForce, Player.delta)
 
     def moveRight(self):
         self.xVel += Player.acceleration
@@ -65,64 +59,31 @@ class Player:
 
     # collision detection concepts from http://jeffreythompson.org/collision-detection/rect-rect.php
     def checkYCollide(self, app, tileMap):
-        rows, cols = len(tileMap), len(tileMap[0])
-
-        tileW = app.width / cols
-        tileH = app.height / rows
-
-        for row in range(rows):
-            for col in range(cols):
-                left, right = tileW*col, tileW + tileW*col
-                top, bot = tileH*row, tileH + tileH*row
-
-                playerLeft, playerTop = self.x, self.y
-                playerRight = playerLeft + self.width
-                playerBot = playerTop + self.height
-                if tileMap[row][col] != 0:
-                    if not (playerLeft >= right or playerRight <= left):
-                        if playerBot >= top and playerTop <= bot:
-                            if self.yVel > 0:
-                                self.y = top - self.height
-                                self.yVel = 0
-                            elif self.yVel < 0:
-                                self.y = bot
-                                self.yVel = 0
-                            return True
+        yCollide(self, app, tileMap)
     
     def checkXCollide(self, app, tileMap):
-        rows, cols = len(tileMap), len(tileMap[0])
-
-        tileW = app.width / cols
-        tileH = app.height / rows
-
-        for row in range(rows):
-            for col in range(cols):
-                left, right = tileW*col, tileW + tileW*col
-                top, bot = tileH*row, tileH + tileH*row
-
-                playerLeft, playerTop = self.x, self.y
-                playerRight = playerLeft + self.width
-                playerBot = playerTop + self.height
-                if tileMap[row][col] != 0:
-                    if not (playerTop >= bot or playerBot <= top):
-                        if playerRight >= left and playerLeft <= right:
-                            if self.xVel > 0:
-                                self.x = left - self.width
-                                self.xVel = 0
-                            elif self.xVel < 0:
-                                self.x = right
-                                self.xVel = 0
-                            return True
+        xCollide(self, app, tileMap)
 
     def respawn(self):
-        app.player.x = self.load[0]
-        app.player.y = self.load[1]
+        self.x = self.load[0]
+        self.y = self.load[1]
 
     def doStep(self, app, tileMap):
-        app.player.applyGravity()
-        app.player.checkYCollide(app, tileMap)
-        app.player.applyAccel()
-        app.player.applyFriction()
-        app.player.checkXCollide(app, tileMap)
-        if app.player.y > app.height:
-            app.player.respawn()
+        self.giveAbilities()
+        self.applyGravity()
+        self.checkYCollide(app, tileMap)
+        self.applyAccel()
+        self.applyFriction()
+        self.checkXCollide(app, tileMap)
+        if self.y > app.height:
+            self.respawn()
+        if self.x <= 0:
+            self.x = 0
+
+    def giveAbilities(self):
+        if len(self.collected) == 5:
+            self.abilities.append('dash')
+        elif len(self.collected) == 8:
+            self.abilities.append('double jump')
+        elif len(self.collected) == 12:
+            self.completed = True

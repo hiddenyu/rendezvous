@@ -2,14 +2,12 @@ from cmu_graphics import *
 from PIL import Image
 
 class Item:
-    counter = 0
     width, height = 50, 50
 
     def __init__(self, x, y, index):
         self.x, self.y = x, y - Item.height
         self.index = index
         self.sprite = CMUImage(Image.open('pfp.jpg'))
-        self.abilities = ['dash', 'double jump', 'illuminate?']
         self.isVisible = True
         # get a way so only the visible item can be interacted with
         
@@ -24,13 +22,8 @@ class Item:
             if playerRight >= left and playerLeft <= right:
                 if playerBot >= top and playerTop <= bot:
                     self.isVisible = False
-                    Item.counter += 1
-                    if self.counter == 5:
-                        player.abilities.append(self.abilities[0])
-                    elif self.counter == 8:
-                        player.abilities.append(self.abilities[1])
-                    elif self.counter == 12:
-                        player.abilities.append(self.abilities[2])
+                    player.collected.append(self.index)
+
     def draw(self):
         if self.isVisible:
             drawImage(self.sprite, self.x, self.y, width=Item.width, 
