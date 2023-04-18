@@ -4,7 +4,7 @@ from PIL import Image
 class Level:
     def __init__(self, tileMap):
         self.tileMap = tileMap
-        self.tileSize = 60
+        self.tileSize = app.width / len(self.tileMap[0])
         self.sprites = None
 
     def draw(self):

@@ -10,8 +10,15 @@ from player import *
 from level import *
 from item import *
 from tilemaps import *
-import math, copy, time
+import math, copy, time, random
 # time for timed events later on
+
+# CHECKLIST :
+# - win/lose condition
+# - powerups
+# - side scrolling
+# - random terrain generation
+#       - i think procedural is best?
 
 def onAppStart(app):
     app.stepsPerSecond = Player.delta
@@ -26,6 +33,7 @@ def redrawAll(app):
     app.player.draw()
     app.level.draw()
     app.item.draw()
+    app.level.newPlatform()
 
 def onStep(app):
     app.player.doStep(app, app.tileMaps.tileMap1)

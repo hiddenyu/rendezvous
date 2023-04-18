@@ -4,12 +4,13 @@ from PIL import Image
 
 class Player:
     jumpForce = 1000
-    acceleration = 200
+    acceleration = 150
     gravityForce = 100
     frictionForce = 0.5
     maxSpeed = 500
     maxFall = 1000
     delta = 30
+    # can jump 2 blocks high and 5 across?
 
     def __init__(self, x, y):
         self.x = x
@@ -22,7 +23,7 @@ class Player:
         self.completed = False
         self.sprite = CMUImage(Image.open('test.jpg'))
         self.width, self.height = getImageSize(self.sprite)
-        self.width, self.height = self.width / 3, self.height / 3
+        self.width, self.height = 60, 60
     
     # to animate with sprite strip
     # app.sprites = []
