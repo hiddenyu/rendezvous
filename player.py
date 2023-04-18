@@ -59,23 +59,23 @@ class Player:
         self.yVel = -Player.jumpForce
 
     # collision detection concepts from http://jeffreythompson.org/collision-detection/rect-rect.php
-    def checkYCollide(self, app, tileMap):
-        yCollide(self, app, tileMap)
+    def checkYCollide(self, app, tileMap, levelX):
+        yCollide(self, app, tileMap, levelX)
     
-    def checkXCollide(self, app, tileMap):
-        xCollide(self, app, tileMap)
+    def checkXCollide(self, app, tileMap, levelX):
+        xCollide(self, app, tileMap, levelX)
 
     def respawn(self):
         self.x = self.load[0]
         self.y = self.load[1]
 
-    def doStep(self, app, tileMap):
+    def doStep(self, app, tileMap, levelX):
         self.giveAbilities()
         self.applyGravity()
-        self.checkYCollide(app, tileMap)
+        self.checkYCollide(app, tileMap, levelX)
         self.applyAccel()
         self.applyFriction()
-        self.checkXCollide(app, tileMap)
+        self.checkXCollide(app, tileMap, levelX)
         if self.y > app.height:
             self.respawn()
         if self.x <= 0:

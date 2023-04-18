@@ -33,15 +33,17 @@ def redrawAll(app):
     app.player.draw()
     app.level.draw()
     app.item.draw()
-    app.level.newPlatform()
 
 def onStep(app):
-    app.player.doStep(app, app.tileMaps.tileMap1)
+    app.player.doStep(app, app.tileMaps.tileMap1, app.level.x)
     app.item.checkCollide(app.player)
     if app.player.yVel == 0:
         app.onGround = True
     else:
         app.onGround = False
+    # if app.player.x > 1250 and app.player.xVel > 0:
+    #     scrollVel = - app.player.xVel
+    #     app.level.scroll(scrollVel)
 
 def onKeyPress(app, key):
     if key == 'space' and app.onGround:

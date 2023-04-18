@@ -1,7 +1,7 @@
 from cmu_graphics import *
 
 # collision detection concepts from http://jeffreythompson.org/collision-detection/rect-rect.php
-def yCollide(self, app, tileMap):
+def yCollide(self, app, tileMap, levelX):
     rows, cols = len(tileMap), len(tileMap[0])
 
     tileW = app.width / cols
@@ -9,7 +9,7 @@ def yCollide(self, app, tileMap):
 
     for row in range(rows):
         for col in range(cols):
-            left, right = tileW*col, tileW + tileW*col
+            left, right = levelX + tileW*col, levelX + tileW + tileW*col
             top, bot = tileH*row, tileH + tileH*row
 
             playerLeft, playerTop = self.x, self.y
@@ -26,7 +26,7 @@ def yCollide(self, app, tileMap):
                             self.yVel = 0
                         return True
 
-def xCollide(self, app, tileMap):
+def xCollide(self, app, tileMap, levelX):
     rows, cols = len(tileMap), len(tileMap[0])
 
     tileW = app.width / cols
@@ -34,7 +34,7 @@ def xCollide(self, app, tileMap):
 
     for row in range(rows):
         for col in range(cols):
-            left, right = tileW*col, tileW + tileW*col
+            left, right = levelX + tileW*col, levelX + tileW + tileW*col
             top, bot = tileH*row, tileH + tileH*row
 
             playerLeft, playerTop = self.x, self.y
