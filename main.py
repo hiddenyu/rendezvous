@@ -41,9 +41,6 @@ def onStep(app):
         app.onGround = True
     else:
         app.onGround = False
-    # if app.player.x > 1250 and app.player.xVel > 0:
-    #     scrollVel = - app.player.xVel
-    #     app.level.scroll(scrollVel)
 
 def onKeyPress(app, key):
     if key == 'space' and app.onGround:
