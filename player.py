@@ -1,5 +1,6 @@
 from cmu_graphics import *
 from physics import *
+from platforms import *
 from PIL import Image
 
 class Player:
@@ -60,7 +61,7 @@ class Player:
 
     # collision detection concepts from http://jeffreythompson.org/collision-detection/rect-rect.php
     def checkYCollide(self, app, tileMap, levelX):
-        yCollide(self, app, tileMap, levelX)
+        return yCollide(self, app, tileMap, levelX)
     
     def checkXCollide(self, app, tileMap, levelX):
         xCollide(self, app, tileMap, levelX)
@@ -69,17 +70,20 @@ class Player:
         self.x = self.load[0]
         self.y = self.load[1]
 
-    def doStep(self, app, tileMap, levelX):
+    def doStep(self, app, tileMap, level):
         self.giveAbilities()
         self.applyGravity()
-        self.checkYCollide(app, tileMap, levelX)
+        onGround = self.checkYCollide(app, tileMap, level.x)
+        for platform in level.platformList:
+            onGround2 = platform.collide(self)
         self.applyAccel()
         self.applyFriction()
-        self.checkXCollide(app, tileMap, levelX)
+        self.checkXCollide(app, tileMap, level.x)
         if self.y > app.height:
             self.respawn()
         if self.x <= 0:
             self.x = 0
+        return onGround or onGround2
 
     def giveAbilities(self):
         if len(self.collected) == 5:

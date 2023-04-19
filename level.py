@@ -1,51 +1,58 @@
 from cmu_graphics import *
 from PIL import Image
+from perlin import *
+from platforms import *
 import random
 
 class Level:
-    def __init__(self, tileMap):
+    def __init__(self, tileMap, index):
         self.x, self.y = 0, 0
         self.tileMap = tileMap
+        self.index = index
         self.tileSize = app.width / len(self.tileMap[0])
         self.sprites = None
+        self.platformList = []
 
         # platform constants
-        self.xLo = 0
-        self.xHigh = 3
-        self.yLo = 14
-        self.yHigh = len(self.tileMap) - 2
-        self.platLength = random.randint(2, 4)
-        self.platCount = 6
-        self.dx, self.dy = 5, 2
+        self.seed = random.randint(0, 1000)
+        self.xVals = 256
+        self.threshold = 0.3
+        self.startingThreshold = 16
+        self.noise = randomNoise(self.seed, self.xVals)
+        self.perlinNoise = []
 
-        self.generatePlatform(self.tileMap, self.xLo, self.xHigh, 
-                              self.yLo, self.yHigh, self.platLength)
-        for i in range(self.platCount):
-            self.nextPlatform(self.tileMap, self.xLo, self.yLo, 
-                              self.dx, self.dy)
+        for y in range(len(self.tileMap)): # for each y value
+            self.perlinNoise.append(0) # make array of just 0s
+        
+        for y in range(len(self.tileMap)):
+            self.perlinNoise[y] = eval(self.noise, self.xVals, y)
+        self.generatePlatforms()
+        self.seed = random.randint(0, 1000)
+        self.generatePlatforms()
+        self.startingPlat()
+        for platform in self.platformList:
+            if platform.y < 0:
+                self.platformList.remove(platform)
 
-    def generatePlatform(self, tileMap, xLo, xHigh, yLo, yHigh, length):
-        overlap = True
-        x, y = self.randomNum(self.tileMap, xLo, xHigh, yLo, yHigh, length)
-        while overlap:
-            for i in range(length):
-                if tileMap[y][x + i] == 1:
-                    x, y = self.randomNum(self.tileMap, xLo, xHigh, yLo, yHigh, length)
-                    overlap = True
-                else:
-                    tileMap[y][x + i] = 1
-                    overlap = False
-        print(x, y, length)
-        self.xLo, self.yLo, self.platLength = x, y, length
-    
-    def nextPlatform(self, tileMap, x, y, dx, dy):
-        length = random.randint(2, 5)
-        self.generatePlatform(tileMap, x, x+dx, y, y+dy, length)
+    def startingPlat(self):
+        count = 0
+        for platform in self.platformList:
+            if platform.y // self.tileSize >= self.startingThreshold:
+                count += 1
+            if platform.y <= 3:
+                jumpablePlat = platform
+        if count < 2:
+            x = random.randrange(jumpablePlat.x // self.tileSize - 2, 
+                                 jumpablePlat.x // self.tileSize + 2)
+            self.platformList.append(Platform(x, random.randint(0, self.startingThreshold), 
+                                              random.randint(2, 5), self.tileSize))
 
-    def randomNum(self, tileMap, xLo, xHigh, yLo, yHigh, length):
-        x = random.randint(max(xLo, 0), min(xHigh, len(tileMap[0]) - length))
-        y = random.randint(max(yLo, 0), min(yHigh, len(tileMap) - 1))
-        return x, y
+    def generatePlatforms(self):
+        for y in range(len(self.tileMap)):
+            if self.perlinNoise[y] > self.threshold:
+                platLength = random.randint(2, 5)
+                x = random.randrange(0, len(self.tileMap[0]), platLength)
+                self.platformList.append(Platform(x, y - 1, platLength, self.tileSize))
 
     def draw(self):
         rows, cols = len(self.tileMap), len(self.tileMap[0])
@@ -55,3 +62,5 @@ class Level:
                     drawRect(self.x + self.tileSize*col, 
                              self.y + self.tileSize*row, self.tileSize, 
                              self.tileSize, fill='red')
+        for platform in self.platformList:
+            platform.draw()

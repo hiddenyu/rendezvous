@@ -7,6 +7,7 @@ def yCollide(self, app, tileMap, levelX):
     tileW = app.width / cols
     tileH = app.height / rows
 
+    onGround = False
     for row in range(rows):
         for col in range(cols):
             left, right = levelX + tileW*col, levelX + tileW + tileW*col
@@ -15,16 +16,18 @@ def yCollide(self, app, tileMap, levelX):
             playerLeft, playerTop = self.x, self.y
             playerRight = playerLeft + self.width
             playerBot = playerTop + self.height
-            if tileMap[row][col] != 0:
+            
+            if tileMap[row][col] != 0: # loops thru all tiles, checks if colliding
                 if not (playerLeft >= right or playerRight <= left):
                     if playerBot >= top and playerTop <= bot:
-                        if self.yVel > 0:
+                        if self.yVel > 0: # if moving down
                             self.y = top - self.height
                             self.yVel = 0
-                        elif self.yVel < 0:
+                            onGround = True
+                        elif self.yVel < 0: # if moving up
                             self.y = bot
                             self.yVel = 0
-                        return True
+    return onGround
 
 def xCollide(self, app, tileMap, levelX):
     rows, cols = len(tileMap), len(tileMap[0])
@@ -43,16 +46,16 @@ def xCollide(self, app, tileMap, levelX):
             if tileMap[row][col] != 0:
                 if not (playerTop >= bot or playerBot <= top):
                     if playerRight >= left and playerLeft <= right:
-                        if self.xVel > 0:
+                        if self.xVel > 0: # if moving to right
                             self.x = left - self.width
                             self.xVel = 0
-                        elif self.xVel < 0:
+                        elif self.xVel < 0: # if moving to left
                             self.x = right
                             self.xVel = 0
                         return True
 
 def gravity(self, gravityForce, maxFall, delta):
-    self.yVel += gravityForce
+    self.yVel += gravityForce # keeps pulling player down every step
     self.yVel = min(self.yVel, maxFall)
     self.y += self.yVel / delta
 

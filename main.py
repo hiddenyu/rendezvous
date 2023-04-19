@@ -10,6 +10,7 @@ from player import *
 from level import *
 from item import *
 from tilemaps import *
+from platforms import *
 import math, copy, time, random
 # time for timed events later on
 
@@ -25,7 +26,7 @@ def onAppStart(app):
     app.width, app.height = 1920, 1080
     app.player = Player(300, 0)
     app.tileMaps = Tilemaps()
-    app.level = Level(app.tileMaps.tileMap1)
+    app.level = Level(app.tileMaps.tileMap0, 0)
     app.onGround = False
     app.item = Item(800, 760, 1)
 
@@ -35,12 +36,8 @@ def redrawAll(app):
     app.item.draw()
 
 def onStep(app):
-    app.player.doStep(app, app.tileMaps.tileMap1, app.level.x)
+    app.onGround = app.player.doStep(app, app.tileMaps.tileMap0, app.level)
     app.item.checkCollide(app.player)
-    if app.player.yVel == 0:
-        app.onGround = True
-    else:
-        app.onGround = False
 
 def onKeyPress(app, key):
     if key == 'space' and app.onGround:
