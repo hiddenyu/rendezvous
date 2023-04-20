@@ -38,6 +38,7 @@ def redrawAll(app):
 def onStep(app):
     app.onGround = app.player.doStep(app, app.tileMaps.tileMap0, app.level)
     app.item.checkCollide(app.player)
+    app.level.scroll(app.player)
 
 def onKeyPress(app, key):
     if key == 'space' and app.onGround:

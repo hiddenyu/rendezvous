@@ -73,17 +73,26 @@ class Player:
     def doStep(self, app, tileMap, level):
         self.giveAbilities()
         self.applyGravity()
-        onGround = self.checkYCollide(app, tileMap, level.x)
-        for platform in level.platformList:
-            onGround2 = platform.collide(self)
+        test0 = self.checkYCollide(app, tileMap, level.x)
+
+        # test1 = False
+        # onGround = False
+        # for platform in level.platformList:
+        #     test1 = platform.yCollide(self)
+        #     if test0 or test1:
+        #         onGround = True
+        #     platform.xCollide(self)
+
         self.applyAccel()
         self.applyFriction()
         self.checkXCollide(app, tileMap, level.x)
+
         if self.y > app.height:
             self.respawn()
         if self.x <= 0:
             self.x = 0
-        return onGround or onGround2
+
+        return test0
 
     def giveAbilities(self):
         if len(self.collected) == 5:

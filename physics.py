@@ -52,7 +52,6 @@ def xCollide(self, app, tileMap, levelX):
                         elif self.xVel < 0: # if moving to left
                             self.x = right
                             self.xVel = 0
-                        return True
 
 def gravity(self, gravityForce, maxFall, delta):
     self.yVel += gravityForce # keeps pulling player down every step
