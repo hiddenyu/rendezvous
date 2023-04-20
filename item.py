@@ -9,7 +9,6 @@ class Item:
         self.index = index
         self.sprite = CMUImage(Image.open('pfp.jpg'))
         self.isVisible = True
-        # get a way so only the visible item can be interacted with
         
     def checkCollide(self, player):
         if self.isVisible:

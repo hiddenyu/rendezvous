@@ -15,10 +15,6 @@ class Level:
         self.sprites = None
         self.platformList = []
 
-        # camera constants
-        self.cameraLeft = 320
-        self.cameraRight = self.width - app.width - self.cameraLeft
-
         # platform constants
         self.seed = random.randint(0, 1000)
         self.xVals = 256
@@ -72,26 +68,3 @@ class Level:
                              self.tileSize, fill='red')
         # for platform in self.platformList:
         #     platform.draw()
-    
-    def scroll(self, player):
-        if player.xVel > 0:
-            sign = 1
-        else:
-            sign = -1
-
-        if player.x > self.cameraRight and self.x > -self.cameraRight:
-            player.x = self.cameraRight
-            cameraDelta = sign * (abs(player.xVel) + Player.acceleration) / Player.delta
-            if almostEqual(player.xVel, 0):
-                cameraDelta = 0
-            self.x -= cameraDelta
-        elif player.x < self.cameraLeft and self.x < -self.cameraLeft and self.x < 0:
-            player.x = self.cameraLeft
-            cameraDelta = sign * (abs(player.xVel) + Player.acceleration) / Player.delta
-            if almostEqual(player.xVel, 0):
-                cameraDelta = 0
-            self.x -= cameraDelta
-        elif self.x >= 0:
-            self.x = 0
-        elif self.x <= -self.width:
-            self.x = -self.width
