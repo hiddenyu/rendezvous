@@ -14,6 +14,10 @@ class Level:
         self.sprites = None
         self.platformList = []
 
+        # camera constants
+        self.cameraRight = 1600
+        self.cameraLeft = 320
+
         # platform constants
         self.seed = random.randint(0, 1000)
         self.xVals = 256
@@ -69,19 +73,22 @@ class Level:
         #     platform.draw()
     
     def scroll(self, player):
-        # atBorder = False
-        # if self.x > 0:
-        #     self.x = 0
-        #     atBorder = True
-        # elif self.x < 1600:
-        #     self.x = 1600
-        #     atBorder = True
-        # else:
-        #     atBorder = False
-        
-        if player.x < 320 and -320 < self.x < 0:
-            player.x = 320
-            self.x -= player.xVel / Player.delta
-        elif player.x > 1600 and self.x > -1600:
-            player.x = 1080
-            self.x -= player.xVel / Player.delta
+        if player.xVel > 0:
+            sign = 1
+        else:
+            sign = -1
+
+        if player.x > self.cameraRight and self.x > -self.cameraRight:
+            player.x = self.cameraRight
+            cameraDelta = sign * (abs(player.xVel) + Player.acceleration) / Player.delta
+            if almostEqual(player.xVel, 0):
+                cameraDelta = 0
+            self.x -= cameraDelta
+        elif player.x < self.cameraLeft and -self.cameraLeft < self.x < 0:
+            player.x = self.cameraLeft
+            cameraDelta = sign * (abs(player.xVel) + Player.acceleration) / Player.delta
+            if almostEqual(player.xVel, 0):
+                cameraDelta = 0
+            self.x -= cameraDelta
+        elif self.x >= 0:
+            self.x = 0
