@@ -4,8 +4,8 @@ from cmu_graphics import *
 def yCollide(self, app, tileMap, levelX):
     rows, cols = len(tileMap), len(tileMap[0])
 
-    tileW = app.width / cols
-    tileH = app.height / rows
+    tileW = app.tileSize
+    tileH = app.tileSize
 
     onGround = False
     for row in range(rows):
@@ -32,8 +32,8 @@ def yCollide(self, app, tileMap, levelX):
 def xCollide(self, app, tileMap, levelX):
     rows, cols = len(tileMap), len(tileMap[0])
 
-    tileW = app.width / cols
-    tileH = app.height / rows
+    tileW = app.tileSize
+    tileH = app.tileSize
 
     for row in range(rows):
         for col in range(cols):

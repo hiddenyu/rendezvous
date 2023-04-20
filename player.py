@@ -91,6 +91,8 @@ class Player:
             self.respawn()
         if self.x <= 0:
             self.x = 0
+        if self.x >= app.width - self.width:
+            self.x = app.width - self.width
 
         return test0
 

@@ -10,13 +10,14 @@ class Level:
         self.x, self.y = 0, 0
         self.tileMap = tileMap
         self.index = index
-        self.tileSize = app.width / len(self.tileMap[0])
+        self.tileSize = 60
+        self.width = len(self.tileMap[0]) * self.tileSize
         self.sprites = None
         self.platformList = []
 
         # camera constants
-        self.cameraRight = 1600
         self.cameraLeft = 320
+        self.cameraRight = self.width - app.width - self.cameraLeft
 
         # platform constants
         self.seed = random.randint(0, 1000)
@@ -84,7 +85,7 @@ class Level:
             if almostEqual(player.xVel, 0):
                 cameraDelta = 0
             self.x -= cameraDelta
-        elif player.x < self.cameraLeft and -self.cameraLeft < self.x < 0:
+        elif player.x < self.cameraLeft and self.x < -self.cameraLeft and self.x < 0:
             player.x = self.cameraLeft
             cameraDelta = sign * (abs(player.xVel) + Player.acceleration) / Player.delta
             if almostEqual(player.xVel, 0):
@@ -92,3 +93,5 @@ class Level:
             self.x -= cameraDelta
         elif self.x >= 0:
             self.x = 0
+        elif self.x <= -self.width:
+            self.x = -self.width

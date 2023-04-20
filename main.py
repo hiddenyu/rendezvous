@@ -27,6 +27,7 @@ def onAppStart(app):
     app.player = Player(300, 0)
     app.tileMaps = Tilemaps()
     app.level = Level(app.tileMaps.tileMap0, 0)
+    app.tileSize = app.level.tileSize
     app.onGround = False
     app.item = Item(800, 760, 1)
 
