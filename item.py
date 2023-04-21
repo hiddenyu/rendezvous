@@ -20,10 +20,13 @@ class Item:
             playerBot = playerTop + player.height
             if playerRight >= left and playerLeft <= right:
                 if playerBot >= top and playerTop <= bot:
+                    player.collected.add(self.index)
                     self.isVisible = False
-                    player.collected.append(self.index)
 
     def draw(self):
         if self.isVisible:
             drawImage(self.sprite, self.x, self.y, width=Item.width, 
                     height=Item.height)
+    
+    def __repr__(self):
+        return f'Item({self.x}, {self.y}, {self.index})'

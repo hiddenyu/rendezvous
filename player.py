@@ -4,6 +4,7 @@ from platforms import *
 from PIL import Image
 
 class Player:
+    # physics constants
     jumpForce = 1000
     acceleration = 150
     gravityForce = 100
@@ -11,7 +12,7 @@ class Player:
     maxSpeed = 500
     maxFall = 1000
     delta = 30
-    # can jump 2 blocks high and 5 across?
+    dashForce = 200
 
     def __init__(self, x, y):
         self.x = x
@@ -19,9 +20,15 @@ class Player:
         self.load = [x, y]
         self.xVel = 0
         self.yVel = 0
-        self.collected = []
-        self.abilities = []
+
+        # ability constants
+        self.collected = set()
+        self.abilities = set()
         self.completed = False
+        self.onGround = False
+        self.canDoubleJump = False
+        self.dashed = False
+
         self.sprite = CMUImage(Image.open('test.jpg'))
         self.width, self.height = getImageSize(self.sprite)
         self.width, self.height = 60, 60
@@ -97,9 +104,15 @@ class Player:
         return test0
 
     def giveAbilities(self):
-        if len(self.collected) == 5:
-            self.abilities.append('dash')
-        elif len(self.collected) == 8:
-            self.abilities.append('double jump')
-        elif len(self.collected) == 12:
+        if self.collected == {1, 2, 3, 4, 5}:
+            self.abilities.add('dash')
+        elif self.collected == {1, 2, 3, 4, 5, 6, 7, 8}:
+            self.abilities.add('double jump')
+        elif self.collected == {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}:
             self.completed = True
+    
+    def dash(self):
+        if self.xVel > 0 or almostEqual(self.xVel, 0):
+            self.x += Player.dashForce
+        else:
+            self.x -= Player.dashForce

@@ -17,7 +17,7 @@ def yCollide(self, app, tileMap, levelX):
             playerRight = playerLeft + self.width
             playerBot = playerTop + self.height
             
-            if tileMap[row][col] != 0: # loops thru all tiles, checks if colliding
+            if tileMap[row][col] == 1: # loops thru all tiles, checks if colliding
                 if not (playerLeft >= right or playerRight <= left):
                     if playerBot >= top and playerTop <= bot:
                         if self.yVel > 0: # if moving down
@@ -43,7 +43,8 @@ def xCollide(self, app, tileMap, levelX):
             playerLeft, playerTop = self.x, self.y
             playerRight = playerLeft + self.width
             playerBot = playerTop + self.height
-            if tileMap[row][col] != 0:
+            
+            if tileMap[row][col] == 1:
                 if not (playerTop >= bot or playerBot <= top):
                     if playerRight >= left and playerLeft <= right:
                         if self.xVel > 0: # if moving to right
