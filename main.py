@@ -16,7 +16,8 @@ import math, copy, time, random
 # time for timed events later on
 
 # CHECKLIST :
-# - item creation per level, still doesnt scroll with level
+# - item still doesnt scroll with level
+# - new bug! level doesnt scroll back all the way! haha!
 # - win/lose condition
 # - random terrain generation (collisions have not worked)
 #       - i think procedural is best?
@@ -67,9 +68,8 @@ def onKeyPress(app, key):
             app.player.canDoubleJump = False
     if key == 'e':
         if 'dash' in app.player.abilities:
-            app.player.dashed = True
             app.player.dash()
-            app.player.dashed = False
+            app.camera.dashScroll(app.level, app.player)
 
 def onKeyHold(app, keys):
     if 'd' in keys:

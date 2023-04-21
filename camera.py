@@ -31,19 +31,28 @@ class Camera:
                 cameraDelta = 0
             object.x -= cameraDelta
         
+        # hitting edges
+        if object.x >= 0:
+            object.x = 0
+        if object.x <= -self.width:
+            object.x = -self.width
+
+        return object.x
+    
+    def dashScroll(self, object, player):
         # if player dashes
-        elif player.dashed and object.x > -self.cameraRight:
-            player.x = self.cameraRight
+        if player.xVel > 0 and object.x > -self.cameraRight:
+            # player.x = self.cameraRight
             object.x -= Player.dashForce
         
-        elif player.dashed and object.x < -self.cameraLeft and object.x < 0:
-            player.x = self.cameraLeft
-            object.x -= Player.dashForce
+        elif player.xVel < 0 and object.x < -self.cameraLeft and object.x < 0:
+            # player.x = self.cameraLeft
+            object.x += Player.dashForce
         
         # hitting edges
-        if self.x >= 0:
-            self.x = 0
-        if self.x <= -self.width:
-            self.x = -self.width
-        
+        if object.x >= 0:
+            object.x = 0
+        if object.x <= -self.width:
+            object.x = -self.width
+
         return object.x

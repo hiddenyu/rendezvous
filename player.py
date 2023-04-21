@@ -27,7 +27,6 @@ class Player:
         self.completed = False
         self.onGround = False
         self.canDoubleJump = False
-        self.dashed = False
 
         self.sprite = CMUImage(Image.open('test.jpg'))
         self.width, self.height = getImageSize(self.sprite)
