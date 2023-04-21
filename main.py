@@ -16,9 +16,9 @@ import math, copy, time, random
 # time for timed events later on
 
 # CHECKLIST :
+# - item creation per level, still doesnt scroll with level
 # - win/lose condition
-# - powerups
-# - random terrain generation
+# - random terrain generation (collisions have not worked)
 #       - i think procedural is best?
 
 def onAppStart(app):
@@ -28,7 +28,6 @@ def onAppStart(app):
 
     # player constants
     app.player = Player(300, 0)
-    app.onGround = False
 
     # level constants
     app.tileMaps = Tilemaps()
@@ -36,7 +35,9 @@ def onAppStart(app):
     app.tileSize = app.level.tileSize
 
     # item constants
-    app.item = Item(800, 760, 1)
+    app.items = []
+    for i in range(1, app.level.itemCount + 1):
+        app.items.append(Item(100*i + 300, 900, i))
 
     # camera constants
     app.cameraLeft = 320
@@ -45,54 +46,36 @@ def onAppStart(app):
 
 def redrawAll(app):
     app.player.draw()
-    app.level.draw()
-    app.item.draw()
+    app.level.draw(app)
+    for i in range(app.level.itemCount):
+        app.items[i].draw()
 
 def onStep(app):
-    app.onGround = app.player.doStep(app, app.tileMaps.tileMap0, app.level)
-    app.item.checkCollide(app.player)
-    scroll(app.camera, app.item, app.player)
-    scroll(app.camera, app.level, app.player)
+    app.player.onGround = app.player.doStep(app, app.tileMaps.tileMap0, app.level)
+    for item in app.items:
+        item.checkCollide(app.player)
+        app.player.giveAbilities()
+    app.camera.scroll(app.level, app.player)
 
 def onKeyPress(app, key):
-    if key == 'space' and app.onGround:
-        app.player.jump()
+    if key == 'space':
+        if app.player.onGround:
+            app.player.jump()
+            app.player.canDoubleJump = True
+        elif 'double jump' in app.player.abilities and app.player.canDoubleJump:
+            app.player.jump()
+            app.player.canDoubleJump = False
+    if key == 'e':
+        if 'dash' in app.player.abilities:
+            app.player.dashed = True
+            app.player.dash()
+            app.player.dashed = False
 
 def onKeyHold(app, keys):
     if 'd' in keys:
         app.player.moveRight()
     if 'a' in keys:
         app.player.moveLeft()
-
-def scroll(camera, object, player):
-    if player.xVel > 0:
-        sign = 1
-    else:
-        sign = -1
-
-    # if player moves to right 
-    if player.x > camera.cameraRight and object.x > -camera.cameraRight:
-        player.x = camera.cameraRight
-        cameraDelta = sign * (abs(player.xVel) + Player.acceleration) / Player.delta
-        if almostEqual(player.xVel, 0):
-            cameraDelta = 0
-        object.x -= cameraDelta
-    
-    # if player moves to left
-    elif player.x < camera.cameraLeft and object.x < -camera.cameraLeft and object.x < 0:
-        player.x = camera.cameraLeft
-        cameraDelta = sign * (abs(player.xVel) + Player.acceleration) / Player.delta
-        if almostEqual(player.xVel, 0):
-            cameraDelta = 0
-        object.x -= cameraDelta
-    
-    # hitting edges
-    if camera.x >= 0:
-        camera.x = 0
-    if camera.x <= -camera.width:
-        camera.x = -camera.width
-    
-    return object.x
 
 def main():
     runApp()
