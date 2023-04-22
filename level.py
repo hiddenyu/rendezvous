@@ -2,19 +2,22 @@ from cmu_graphics import *
 from PIL import Image
 from player import *
 from item import *
+from portal import *
+
 from perlin import *
 from platforms import *
 import random
 
 class Level:
-    def __init__(self, tileMap, index):
+    def __init__(self, tileMap, index, itemCount):
         self.x, self.y = 0, 0
         self.tileMap = tileMap
         self.index = index
         self.tileSize = 60
         self.width = len(self.tileMap[0]) * self.tileSize
         self.sprites = None
-        self.itemCount = 5
+        self.itemCount = itemCount
+        self.portal = Portal(1000, 800, 1)
 
         # platform constants
         self.platformList = []
@@ -70,5 +73,9 @@ class Level:
                 # draw tiles
                 if self.tileMap[row][col] == 1:
                     drawRect(xVal, yVal, self.tileSize, self.tileSize, fill='red')
+        self.portal.draw()
         # for platform in self.platformList:
         #     platform.draw()
+    
+    def __repr__(self):
+        return f'Level {self.index}'

@@ -28,7 +28,8 @@ def onAppStart(app):
 
     # level constants
     app.tileMaps = Tilemaps()
-    app.level = Level(app.tileMaps.tileMap0, 0)
+    app.levels = [Level(app.tileMaps.tileMap0, 0, 5), Level(app.tileMaps.tileMap1, 1, 3), Level(app.tileMaps.tileMap2, 2, 4)]
+    app.level = app.levels[0]
     app.tileSize = app.level.tileSize
 
     # item constants
@@ -48,8 +49,16 @@ def redrawAll(app):
         app.items[i].draw()
 
 def onStep(app):
-    app.player.onGround = app.player.doStep(app, app.tileMaps.tileMap0, app.level)
+    app.player.onGround = app.player.doStep(app, app.level)
     app.cameraDelta = app.camera.scroll(app.level, app.player)
+
+    # portal checks
+    app.level.portal.scroll(app)
+    app.level.portal.checkCollide(app.player)
+    if len(app.player.collected) == app.level.itemCount:
+        app.level.portal.worldDone = True
+    
+    # item checks
     for item in app.items:
         item.checkCollide(app.player)
         app.player.giveAbilities()

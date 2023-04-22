@@ -29,7 +29,6 @@ class Player:
         self.canDoubleJump = False
 
         self.sprite = CMUImage(Image.open('test.jpg'))
-        self.width, self.height = getImageSize(self.sprite)
         self.width, self.height = 60, 60
     
     # to animate with sprite strip
@@ -76,7 +75,8 @@ class Player:
         self.x = self.load[0]
         self.y = self.load[1]
 
-    def doStep(self, app, tileMap, level):
+    def doStep(self, app, level):
+        tileMap = level.tileMap
         self.giveAbilities()
         self.applyGravity()
         test0 = self.checkYCollide(app, tileMap, level.x)
