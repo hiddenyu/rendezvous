@@ -38,12 +38,12 @@ class Level:
             self.portal = Portal(3600, 240, self.nextWorld)
         elif self.index == 1:
             start = 6
-            self.items = [Item(1200, 960, 1), Item(100, 600, 2), Item(1400, 240, 3)]
-            self.portal = Portal(3600, 240, self.nextWorld)
+            self.items = [Item(500, 1020, 6), Item(1500, 1020, 7), Item(3000, 1020, 8)]
+            self.portal = Portal(3600, 1020, self.nextWorld)
         elif self.index == 2:
             start = 9
-            self.items = [Item(1200, 960, 1), Item(100, 600, 2), Item(1400, 240, 3), Item(2750, 600, 4)]
-            self.portal = Portal(3600, 240, self.nextWorld)
+            self.items = [Item(750, 1020, 9), Item(1000, 1020, 10), Item(2000, 1020, 11), Item(2750, 1020, 12)]
+            self.portal = Portal(3600, 1020, self.nextWorld)
         self.totalItems = start + self.itemCount
 
         # for y in range(len(self.tileMap)): # for each y value

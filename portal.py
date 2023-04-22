@@ -26,7 +26,7 @@ class Portal:
                     else:
                         app.level = app.levels[app.level.nextWorld]
                         self.worldDone = False
-                        app.player.x, app.player.y = 100, 800
+                        app.player.x, app.player.y = 100, 900
 
     def scroll(self, app):
         self.x -= app.cameraDelta

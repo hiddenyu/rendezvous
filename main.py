@@ -18,6 +18,8 @@ import math, copy, random
 # - occasional glitch where items/portal get displaced when moving and dashing
 # - random terrain generation (collisions have not worked)
 
+# - remember to change back constants!
+
 def onAppStart(app):
     # app constants
     app.stepsPerSecond = Player.delta
@@ -54,10 +56,10 @@ def onStep(app):
         app.cameraDelta = app.camera.scroll(app.level, app.player)
 
         # portal checks
+        app.level.portal.scroll(app)
         if len(app.player.collected) == app.level.totalItems - 1:
             app.level.portal.worldDone = True
         if app.level.portal.worldDone:
-            app.level.portal.scroll(app)
             app.level.portal.checkCollide(app.player)
         
         # item checks
@@ -65,6 +67,7 @@ def onStep(app):
             item.checkCollide(app.player)
             app.player.giveAbilities()
             item.scroll(app)
+        # print(app.level.portal.x, app.level.portal.worldDone, len(app.player.collected), app.player.abilities)
 
 def onKeyPress(app, key):
     if app.level.index != 3:
@@ -81,7 +84,6 @@ def onKeyPress(app, key):
                 app.cameraDelta = app.camera.dashScroll(app.level, app.player)
                 for item in app.level.items:
                     item.dashScroll(app)
-                if app.level.portal.worldDone:
                     app.level.portal.dashScroll(app)
 
 def onKeyHold(app, keys):
