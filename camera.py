@@ -44,16 +44,21 @@ class Camera:
     
     def dashScroll(self, object, player):
         # if player dashes
+        dashDelta = 0
         if player.xVel > 0 and object.x > app.width - self.width:
             object.x -= Player.dashForce
+            dashDelta = -Player.dashForce
         
         elif player.xVel < 0 and object.x < 0:
             object.x += Player.dashForce
+            dashDelta = Player.dashForce
         
         # hitting edges
         if object.x > 0:
             object.x = 0
+            dashDelta = 0
         if object.x <= app.width - self.width:
             object.x = app.width - self.width
+            dashDelta = 0
 
-        return object.x
+        return dashDelta

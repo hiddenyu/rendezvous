@@ -6,7 +6,7 @@ class Item:
     width, height = 50, 50
 
     def __init__(self, x, y, index):
-        self.x, self.y = x, y - Item.height
+        self.x, self.y = x, y - Item.height - 20
         self.index = index
         self.sprite = CMUImage(Image.open('pfp.jpg'))
         self.isVisible = True
@@ -26,6 +26,9 @@ class Item:
 
     def scroll(self, app):
         self.x -= app.cameraDelta
+    
+    def dashScroll(self, app):
+        self.x += app.cameraDelta
 
     def draw(self):
         if self.isVisible:

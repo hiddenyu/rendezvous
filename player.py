@@ -22,8 +22,8 @@ class Player:
         self.yVel = 0
 
         # ability constants
-        self.collected = set()
-        self.abilities = set()
+        self.collected = {1,2,3,4,5}
+        self.abilities = {'dash'}
         self.completed = False
         self.onGround = False
         self.canDoubleJump = False

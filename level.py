@@ -17,7 +17,9 @@ class Level:
         self.width = len(self.tileMap[0]) * self.tileSize
         self.sprites = None
         self.itemCount = itemCount
-        self.portal = Portal(1000, 800, 1)
+
+        # portal constants
+        self.nextWorld = index + 1
 
         # platform constants
         self.platformList = []
@@ -27,6 +29,22 @@ class Level:
         self.startingThreshold = 17
         self.noise = randomNoise(self.seed, self.xVals)
         self.perlinNoise = []
+
+        # item constants
+        self.items = []
+        if self.index == 0:
+            start = 1
+            self.items = [Item(1200, 960, 1), Item(100, 600, 2), Item(1400, 240, 3), Item(2750, 600, 4), Item(3000, 300, 5)]
+            self.portal = Portal(3600, 240, self.nextWorld)
+        elif self.index == 1:
+            start = 6
+            self.items = [Item(1200, 960, 1), Item(100, 600, 2), Item(1400, 240, 3)]
+            self.portal = Portal(3600, 240, self.nextWorld)
+        elif self.index == 2:
+            start = 9
+            self.items = [Item(1200, 960, 1), Item(100, 600, 2), Item(1400, 240, 3), Item(2750, 600, 4)]
+            self.portal = Portal(3600, 240, self.nextWorld)
+        self.totalItems = start + self.itemCount
 
         # for y in range(len(self.tileMap)): # for each y value
         #     self.perlinNoise.append(0) # make array of just 0s
@@ -73,7 +91,6 @@ class Level:
                 # draw tiles
                 if self.tileMap[row][col] == 1:
                     drawRect(xVal, yVal, self.tileSize, self.tileSize, fill='red')
-        self.portal.draw()
         # for platform in self.platformList:
         #     platform.draw()
     

@@ -3,9 +3,10 @@ from camera import *
 from PIL import Image
 
 class Portal:
+    width, height = 50, 100
+
     def __init__(self, x, y, index):
-        self.x, self.y = x, y
-        self.width, self.height = 50, 100
+        self.x, self.y = x, y - Portal.height - 20
         self.index = index
         self.sprite = None
         self.worldDone = False
@@ -20,12 +21,18 @@ class Portal:
             playerBot = playerTop + player.height
             if playerRight >= left and playerLeft <= right:
                 if playerBot >= top and playerTop <= bot:
-                    app.level = app.levels[self.index]
-                    self.worldDone = False
-                    app.player.x, app.player.y = 100, 800
+                    if app.level.nextWorld == 3:
+                        app.level.index = 3
+                    else:
+                        app.level = app.levels[app.level.nextWorld]
+                        self.worldDone = False
+                        app.player.x, app.player.y = 100, 800
 
     def scroll(self, app):
         self.x -= app.cameraDelta
+
+    def dashScroll(self, app):
+        self.x += app.cameraDelta
 
     def draw(self):
         if self.worldDone:
