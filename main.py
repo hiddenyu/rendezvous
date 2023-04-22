@@ -12,14 +12,11 @@ from item import *
 from tilemaps import *
 from platforms import *
 from camera import *
-import math, copy, time, random
-# time for timed events later on
+import math, copy, random
 
 # CHECKLIST :
-# - item still doesnt scroll with level
-# - win/lose condition
+# - add levels
 # - random terrain generation (collisions have not worked)
-#       - i think procedural is best?
 
 def onAppStart(app):
     # app constants
@@ -52,10 +49,11 @@ def redrawAll(app):
 
 def onStep(app):
     app.player.onGround = app.player.doStep(app, app.tileMaps.tileMap0, app.level)
+    app.cameraDelta = app.camera.scroll(app.level, app.player)
     for item in app.items:
         item.checkCollide(app.player)
         app.player.giveAbilities()
-    app.camera.scroll(app.level, app.player)
+        item.scroll(app)
 
 def onKeyPress(app, key):
     if key == 'space':

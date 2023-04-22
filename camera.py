@@ -15,6 +15,7 @@ class Camera:
         else:
             sign = -1
 
+        cameraDelta = 0
         # if player moves to right 
         if player.x > self.cameraRight and object.x > app.width - self.width:
             player.x = self.cameraRight
@@ -34,19 +35,19 @@ class Camera:
         # hitting edges
         if object.x > 0:
             object.x = 0
+            cameraDelta = 0
         if object.x <= app.width - self.width:
             object.x = app.width - self.width
+            cameraDelta = 0
 
-        return object.x
+        return cameraDelta
     
     def dashScroll(self, object, player):
         # if player dashes
         if player.xVel > 0 and object.x > app.width - self.width:
-            # player.x = self.cameraRight
             object.x -= Player.dashForce
         
         elif player.xVel < 0 and object.x < 0:
-            # player.x = self.cameraLeft
             object.x += Player.dashForce
         
         # hitting edges

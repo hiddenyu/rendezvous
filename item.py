@@ -1,4 +1,5 @@
 from cmu_graphics import *
+from camera import *
 from PIL import Image
 
 class Item:
@@ -22,6 +23,9 @@ class Item:
                 if playerBot >= top and playerTop <= bot:
                     player.collected.add(self.index)
                     self.isVisible = False
+
+    def scroll(self, app):
+        self.x -= app.cameraDelta
 
     def draw(self):
         if self.isVisible:
