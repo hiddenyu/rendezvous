@@ -17,7 +17,6 @@ import math, copy, time, random
 
 # CHECKLIST :
 # - item still doesnt scroll with level
-# - new bug! level doesnt scroll back all the way! haha!
 # - win/lose condition
 # - random terrain generation (collisions have not worked)
 #       - i think procedural is best?
@@ -41,7 +40,7 @@ def onAppStart(app):
         app.items.append(Item(100*i + 300, 900, i))
 
     # camera constants
-    app.cameraLeft = 320
+    app.cameraLeft = 600
     app.cameraRight = app.level.width - app.width - app.cameraLeft
     app.camera = Camera(app, 0, 0, app.cameraLeft, app.cameraRight)
 
