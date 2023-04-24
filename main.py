@@ -30,9 +30,11 @@ def onAppStart(app):
 
     # level constants
     app.tileMaps = Tilemaps()
-    app.levels = [Level(app.tileMaps.tileMap0, 0, 5), Level(app.tileMaps.tileMap1, 1, 3), Level(app.tileMaps.tileMap2, 2, 4)]
+    app.levels = [Level(app.tileMaps.tileMap0, 0, 5, 'level0.png'), Level(app.tileMaps.tileMap1, 1, 3, 'level0.png'), 
+                  Level(app.tileMaps.tileMap2, 2, 4, 'level0.png')]
     app.level = app.levels[0]
     app.tileSize = app.level.tileSize
+    print(len(app.level.tileMap[0]) * app.tileSize)
 
     # camera constants
     app.cameraLeft = 600
@@ -41,12 +43,12 @@ def onAppStart(app):
 
 def redrawAll(app):
     if app.level.index != 3:
-        app.player.draw()
         app.level.draw(app)
         for i in range(app.level.itemCount):
             app.level.items[i].draw()
         if app.level.portal.worldDone:
             app.level.portal.draw()
+        app.player.draw()
     else:
         drawLabel('finished', 1000, 1000)
 

@@ -9,13 +9,13 @@ from platforms import *
 import random
 
 class Level:
-    def __init__(self, tileMap, index, itemCount):
+    def __init__(self, tileMap, index, itemCount, icon):
         self.x, self.y = 0, 0
         self.tileMap = tileMap
         self.index = index
         self.tileSize = 60
         self.width = len(self.tileMap[0]) * self.tileSize
-        self.sprites = None
+        self.sprite = CMUImage(Image.open(icon))
         self.itemCount = itemCount
 
         # portal constants
@@ -84,15 +84,16 @@ class Level:
                 self.platformList.append(Platform(x, y - 1, platLength, self.tileSize))
 
     def draw(self, app):
-        rows, cols = len(self.tileMap), len(self.tileMap[0])
-        for row in range(rows):
-            for col in range(cols):
-                xVal = self.x + self.tileSize*col
-                yVal = self.y + self.tileSize*row
+        drawImage(self.sprite, self.x, self.y)
+        # rows, cols = len(self.tileMap), len(self.tileMap[0])
+        # for row in range(rows):
+        #     for col in range(cols):
+        #         xVal = self.x + self.tileSize*col
+        #         yVal = self.y + self.tileSize*row
 
-                # draw tiles
-                if self.tileMap[row][col] == 1:
-                    drawRect(xVal, yVal, self.tileSize, self.tileSize, fill='red')
+        #         # draw tiles
+        #         if self.tileMap[row][col] == 1:
+        #             drawRect(xVal, yVal, self.tileSize, self.tileSize, fill='red')
         # for platform in self.platformList:
         #     platform.draw()
     
