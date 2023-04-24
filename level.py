@@ -15,7 +15,8 @@ class Level:
         self.index = index
         self.tileSize = 60
         self.width = len(self.tileMap[0]) * self.tileSize
-        self.sprite = CMUImage(Image.open(icon))
+        self.sprite = icon
+        # CMUImage(Image.open(icon))
         self.itemCount = itemCount
 
         # portal constants

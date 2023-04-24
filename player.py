@@ -103,11 +103,14 @@ class Player:
         for platform in level.platformList:
             if platform.yCollide(self):
                 onGround = True
+        if level.floorPlat.yCollide(self):
+            onGround = True
 
         self.applyAccel()
         self.applyFriction()
         for platform in level.platformList:
             platform.xCollide(self)
+        level.floorPlat.xCollide(self)
 
         # if self.y > app.height:
         #     self.respawn()

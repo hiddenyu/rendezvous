@@ -100,6 +100,7 @@ def onStep(app):
 
         for platform in app.randomLevel.platformList:
             platform.scroll(app)
+        app.randomLevel.generate()
 
         # # item checks
         # for item in app.level.items:
