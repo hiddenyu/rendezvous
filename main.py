@@ -17,6 +17,7 @@ import math, copy, random
 
 # CHECKLIST :
 # - implement items and scores for random mode
+# - draw sparkling effect for crystals
 # - for random mode, make it so set number of plats
 # - crystal bar in top corner
 # - mana bar for dash?
@@ -42,7 +43,7 @@ def reset(app):
 
     # level constants
     app.tileMaps = Tilemaps()
-    level0 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\illustrations\level0.png"
+    level0 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\level0.png"
     app.levels = [Level(app.tileMaps.tileMap0, 0, 5, level0), Level(app.tileMaps.tileMap1, 1, 3, level0), 
                   Level(app.tileMaps.tileMap2, 2, 4, level0)]
     app.level = app.levels[0]
@@ -66,25 +67,30 @@ def redrawAll(app):
     ### random mode ###
     elif app.randomMode:
         if app.timerChoice == 0:
-            drawLabel('30', 500, 500)
-            drawLabel('60', 600, 500)
-            drawLabel('120', 700, 500)
+            drawLabel('Choose a time limit', 960, 500, size=75)
+            drawLabel('30', 760, 750, size=50)
+            drawLabel('60', 960, 750, size=50)
+            drawLabel('120', 1160, 750, size=50)
         else:
             app.randomLevel.draw()
             app.player.draw()
-            drawLabel(f'{app.timer}', 100, 300)
+            drawLabel(f'{app.timer // app.stepsPerSecond}', 100, 100, size=50)
 
     elif app.randomEndScreen:
-        drawLabel('random done', 1000, 500)
+        drawLabel('random done', 960, 500, size=75)
+        drawLabel(f'Score: {app.player.score}', 960, 750, size=50)
+        drawLabel('click to restart', 960, 900, size=25)
 
     ### end screen ###
     elif app.endScreen:
-        drawLabel('finished', 1000, 500)
+        drawLabel('finished', 960, 500, size=75)
+        drawLabel('click to restart', 960, 900, size=25)
 
     ### start screen ###
     elif app.startScreen:
-        drawLabel('start', 1000, 500)
-        drawLabel('random mode', 1000, 750)
+        drawLabel('rendezvous', 960, 250, size=150)
+        drawLabel('start', 960, 600, size=50)
+        drawLabel('random mode', 960, 750, size=50)
 
 def onStep(app):
     ### story mode ###
@@ -131,12 +137,18 @@ def onStep(app):
 
 def onMousePress(app, mouseX, mouseY):
     if app.randomMode and app.timerChoice == 0:
-        app.timerChoice = 30
+        if 650 <= mouseY <= 850:
+            if 700 <= mouseX <= 820:
+                app.timerChoice = 30
+            elif 900 <= mouseX <= 1020:
+                app.timerChoice = 60
+            elif 1100 <= mouseX <= 1220:
+                app.timeChoice = 120
         app.timer = app.stepsPerSecond * app.timerChoice
 
     elif app.startScreen:
         if 800 <= mouseX <= 1200:
-            if 450 <= mouseY <= 550:
+            if 550 <= mouseY <= 650:
                 app.gameScreen = True
                 app.startScreen = False
                 app.player.abilities = set()
@@ -149,6 +161,9 @@ def onMousePress(app, mouseX, mouseY):
                 app.timerChoice = 0
                 app.timer = -1
                 app.player.abilities = {'dash', 'double jump'}
+    
+    elif app.endScreen or app.randomEndScreen:
+        reset(app)
 
 def onKeyPress(app, key):
     if (app.gameScreen or app.randomMode):
@@ -173,9 +188,6 @@ def onKeyPress(app, key):
                     app.randCameraDelta = app.camera.randomDashScroll(app.randomLevel, app.player)
                     for platform in app.randomLevel.platformList:
                         platform.dashScroll(app)
-    elif app.endScreen or app.randomEndScreen:
-        if key == 'r':
-            reset(app)
 
 def onKeyHold(app, keys):
     if (app.gameScreen or app.randomMode):
