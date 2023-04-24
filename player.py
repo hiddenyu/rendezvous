@@ -20,6 +20,7 @@ class Player:
         self.load = [x, y]
         self.xVel = 0
         self.yVel = 0
+        self.score = 0
 
         # ability constants
         self.collected = set()
@@ -79,15 +80,7 @@ class Player:
         tileMap = level.tileMap
         self.giveAbilities()
         self.applyGravity()
-        test0 = self.checkYCollide(app, tileMap, level.x)
-
-        # test1 = False
-        # onGround = False
-        # for platform in level.platformList:
-        #     test1 = platform.yCollide(self)
-        #     if test0 or test1:
-        #         onGround = True
-        #     platform.xCollide(self)
+        onGround = self.checkYCollide(app, tileMap, level.x)
 
         self.applyAccel()
         self.applyFriction()
@@ -100,7 +93,30 @@ class Player:
         if self.x >= app.width - self.width:
             self.x = app.width - self.width
 
-        return test0
+        return onGround
+
+    def doStepRandom(self, app, level):
+        self.giveAbilities()
+        self.applyGravity()
+
+        onGround = False
+        for platform in level.platformList:
+            if platform.yCollide(self):
+                onGround = True
+
+        self.applyAccel()
+        self.applyFriction()
+        for platform in level.platformList:
+            platform.xCollide(self)
+
+        # if self.y > app.height:
+        #     self.respawn()
+        if self.x <= 0:
+            self.x = 0
+        if self.x >= app.width - self.width:
+            self.x = app.width - self.width
+        
+        return onGround
 
     def giveAbilities(self):
         if self.collected == {1, 2, 3, 4, 5}:

@@ -26,7 +26,7 @@ class Platform:
                 elif player.yVel < 0: # if moving up
                     player.y = bot
                     player.yVel = 0
-                return onGround
+        return onGround
     
     def xCollide(self, player):
         left, right = self.x, self.x + self.width
@@ -44,6 +44,12 @@ class Platform:
                 elif player.xVel < 0: # if moving to left
                     player.x = right
                     player.xVel = 0
+
+    def scroll(self, app):
+        self.x -= app.cameraDelta
+
+    def dashScroll(self, app):
+        self.x -= app.cameraDelta
 
     def __repr__(self):
         return f'Platform({self.x}, {self.y}, {self.width // self.tileSize})'
