@@ -16,30 +16,29 @@ from randomlevel import *
 import math, copy, random
 
 # CHECKLIST :
-# - occasional glitch where items/portal get displaced when moving and dashing
-# - random terrain generation (collisions have not worked)
-# - finalize start screen
 # - implement items and scores for random mode
+# - for random mode, make it so set number of plats
 # - crystal bar in top corner
 # - mana bar for dash?
 
 # - remember to change back constants!
 
 def onAppStart(app):
+    reset(app)
+
+def reset(app):
     # app constants
     app.stepsPerSecond = Player.delta
     app.width, app.height = 1920, 1080
     app.startScreen = True
     app.gameScreen = False
-    app.randomMode = True
+    app.endScreen = False
+
+    app.randomMode = False
+    app.randomEndScreen = False
 
     # player constants
     app.player = Player(100, 900)
-
-    if app.gameScreen:
-        app.player.abilities = set()
-    elif app.randomMode:
-        app.player.abilities = {'dash', 'double jump'}
 
     # level constants
     app.tileMaps = Tilemaps()
@@ -53,11 +52,9 @@ def onAppStart(app):
     app.cameraRight = app.level.width - app.width - app.cameraLeft
     app.camera = Camera(app, 0, 0, app.cameraLeft, app.cameraRight)
 
-    # random level constants
-    app.randomLevel = RandomLevel()
-
 def redrawAll(app):
-    if app.level.index != 3 and app.gameScreen: # story mode
+    ### story mode ###
+    if app.gameScreen:
         app.level.draw(app)
         for i in range(app.level.itemCount):
             app.level.items[i].draw()
@@ -65,19 +62,32 @@ def redrawAll(app):
             app.level.portal.draw()
         app.player.draw()
 
-    elif app.randomMode: # randomly generated
-        app.randomLevel.draw()
-        app.player.draw()
+    ### random mode ###
+    elif app.randomMode:
+        if app.timerChoice == 0:
+            drawLabel('30', 500, 500)
+            drawLabel('60', 600, 500)
+            drawLabel('120', 700, 500)
+        else:
+            app.randomLevel.draw()
+            app.player.draw()
+            drawLabel(f'{app.timer}', 100, 300)
 
-    elif app.startScreen: # start screen
+    elif app.randomEndScreen:
+        drawLabel('random done', 1000, 500)
+
+    ### end screen ###
+    elif app.endScreen:
+        drawLabel('finished', 1000, 500)
+
+    ### start screen ###
+    elif app.startScreen:
         drawLabel('start', 1000, 500)
         drawLabel('random mode', 1000, 750)
 
-    else: # end screen
-        drawLabel('finished', 1000, 500)
-
 def onStep(app):
-    if app.level.index != 3 and app.gameScreen: # story mode
+    ### story mode ###
+    if app.gameScreen:
         app.player.onGround = app.player.doStep(app, app.level)
         app.cameraDelta = app.camera.scroll(app.level, app.player)
 
@@ -93,14 +103,24 @@ def onStep(app):
             item.checkCollide(app.player)
             app.player.giveAbilities()
             item.scroll(app)
+        
+        if app.level.index == 2 and app.player.completed:
+            app.gameScreen = False
+            app.endScreen = True
 
-    elif app.randomMode: # randomly generated
-        app.player.onGround = app.player.doStepRandom(app, app.randomLevel)
-        app.cameraDelta = app.camera.scroll(app.randomLevel, app.player)
+    ### random mode ###
+    elif app.randomMode:
+        if app.timer > 0:
+            app.timer -= 1
+            app.player.onGround = app.player.doStepRandom(app, app.randomLevel)
+            app.randCameraDelta = app.camera.randomScroll(app.randomLevel, app.player)
 
-        for platform in app.randomLevel.platformList:
-            platform.scroll(app)
-        app.randomLevel.generate()
+            for platform in app.randomLevel.platformList:
+                platform.scroll(app)
+            app.randomLevel.generate()
+        elif app.timer != -1:
+            app.randomEndScreen = True
+            app.randomMode = False
 
         # # item checks
         # for item in app.level.items:
@@ -109,11 +129,28 @@ def onStep(app):
         #     item.scroll(app)
 
 def onMousePress(app, mouseX, mouseY):
-    if app.startScreen:
-        app.randomMode = True
+    if app.randomMode and app.timerChoice == 0:
+        app.timerChoice = 30
+        app.timer = app.stepsPerSecond * app.timerChoice
+
+    elif app.startScreen:
+        if 800 <= mouseX <= 1200:
+            if 450 <= mouseY <= 550:
+                app.gameScreen = True
+                app.startScreen = False
+                app.player.abilities = set()
+            elif 700 <= mouseY <= 800:
+                app.randomMode = True
+                app.startScreen = False
+
+                # random level constants
+                app.randomLevel = RandomLevel()
+                app.timerChoice = 0
+                app.timer = -1
+                app.player.abilities = {'dash', 'double jump'}
 
 def onKeyPress(app, key):
-    if app.level.index != 3 and (app.gameScreen or app.randomMode):
+    if (app.gameScreen or app.randomMode):
         if key == 'space':
             if app.player.onGround:
                 app.player.jump()
@@ -132,12 +169,15 @@ def onKeyPress(app, key):
                         app.level.portal.dashScroll(app)
 
                 elif app.randomMode:
-                    app.cameraDelta = app.camera.dashScroll(app.randomLevel, app.player)
+                    app.randCameraDelta = app.camera.randomDashScroll(app.randomLevel, app.player)
                     for platform in app.randomLevel.platformList:
                         platform.dashScroll(app)
+    elif app.endScreen or app.randomEndScreen:
+        if key == 'r':
+            reset(app)
 
 def onKeyHold(app, keys):
-    if app.level.index != 3 and (app.gameScreen or app.randomMode):
+    if (app.gameScreen or app.randomMode):
         if 'd' in keys:
             app.player.moveRight()
         if 'a' in keys:

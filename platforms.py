@@ -1,6 +1,6 @@
 from cmu_graphics import *
-from PIL import Image
 from player import *
+from PIL import Image
 
 class Platform:
     def __init__(self, x, y, width, tileSize):
@@ -47,16 +47,10 @@ class Platform:
                     player.xVel = 0
 
     def scroll(self, app):
-        if app.cameraDelta < 0:
-            app.cameraDelta = 0
-        self.x -= app.cameraDelta
-        if app.player.x < 0:
-            app.player.x = 0
+        self.x -= app.randCameraDelta
 
     def dashScroll(self, app):
-        self.x += app.cameraDelta
-        if app.player.x > 0:
-            app.player.x = 0
+        self.x += app.randCameraDelta
 
     def __repr__(self):
         return f'Platform({self.x}, {self.y}, {self.width // self.tileSize})'

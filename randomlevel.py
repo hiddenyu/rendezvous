@@ -40,24 +40,21 @@ class RandomLevel:
     def newPlats(self):
         for y in range(self.height // self.tileSize):
             if self.perlinNoise[y] > self.threshold:
-                platLength = random.randint(2, 5)
+                platLength = random.randint(3, 5)
                 x = random.randrange(0, self.width // self.tileSize, platLength)
                 self.platformList.append(Platform(x, y - 1, platLength, self.tileSize))
 
     def generate(self):
-        self.width += app.cameraDelta
         for platform in self.platformList:
             if platform.x + platform.width < 0:
                 # remove if too far left
                 self.platformList.remove(platform)
                 
                 # add a new one
-                platLength = random.randint(2, 5)
+                platLength = random.randint(3, 5)
                 y = random.randint(0, self.height // self.tileSize)
-                print(y, self.perlinNoise[y % (self.height // self.tileSize)])
                 if self.perlinNoise[y % self.height // self.tileSize] > self.threshold:
                     newPlat = Platform(self.width//self.tileSize, y - 1, platLength, self.tileSize)
-                    print(newPlat)
                     self.platformList.append(newPlat)
 
     def draw(self):

@@ -62,3 +62,40 @@ class Camera:
             dashDelta = 0
 
         return dashDelta
+
+    def randomScroll(self, object, player):
+        cameraDelta = 0
+        # if player moves to right 
+        if player.x > self.cameraRight:
+            player.x = self.cameraRight
+            cameraDelta = (abs(player.xVel) + Player.acceleration) / Player.delta
+            if almostEqual(player.xVel, 0):
+                cameraDelta = 0
+            object.x -= cameraDelta
+
+        # hitting edges
+        if player.x < 0:
+            player.x = 0
+            cameraDelta = 0
+        # if object.x <= app.width - self.width:
+        #     object.x = app.width - self.width
+        #     cameraDelta = 0
+
+        return cameraDelta
+    
+    def randomDashScroll(self, object, player):
+        # if player dashes
+        dashDelta = 0
+        if player.xVel > 0:
+            object.x -= Player.dashForce
+            dashDelta = -Player.dashForce
+
+        # hitting edges
+        if player.x < 0:
+            player.x = 0
+            dashDelta = 0
+        # if object.x <= app.width - self.width:
+        #     object.x = app.width - self.width
+        #     dashDelta = 0
+
+        return dashDelta
