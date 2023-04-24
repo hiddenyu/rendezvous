@@ -42,8 +42,9 @@ def reset(app):
 
     # level constants
     app.tileMaps = Tilemaps()
-    app.levels = [Level(app.tileMaps.tileMap0, 0, 5, 'level0.png'), Level(app.tileMaps.tileMap1, 1, 3, 'level0.png'), 
-                  Level(app.tileMaps.tileMap2, 2, 4, 'level0.png')]
+    level0 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\illustrations\level0.png"
+    app.levels = [Level(app.tileMaps.tileMap0, 0, 5, level0), Level(app.tileMaps.tileMap1, 1, 3, level0), 
+                  Level(app.tileMaps.tileMap2, 2, 4, level0)]
     app.level = app.levels[0]
     app.tileSize = app.level.tileSize
 
