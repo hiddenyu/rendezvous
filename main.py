@@ -18,7 +18,6 @@ import math, copy, random
 # CHECKLIST :
 # - draw sparkling effect for crystals
 # - crystal bar in top corner
-# - when dashing in random mode items get displaced
 # - tutorial! 
 
 # - remember to change back constants!
@@ -33,6 +32,8 @@ def reset(app):
     app.startScreen = True
     app.gameScreen = False
     app.endScreen = False
+    app.tutorial = False
+    app.randomTutorial = False
 
     app.randomMode = False
     app.randomEndScreen = False
@@ -67,6 +68,11 @@ def reset(app):
     app.cameraRight = app.level.width - app.width - app.cameraLeft
     app.camera = Camera(app, 0, 0, app.cameraLeft, app.cameraRight)
 
+    # graphics
+    app.title = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\title.png"
+    app.tutorialText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions.png"
+    # app.title = CMUImage(Image.open(app.title))
+
 def redrawAll(app):
     ### story mode ###
     if app.gameScreen:
@@ -76,6 +82,10 @@ def redrawAll(app):
         if app.level.portal.worldDone:
             app.level.portal.draw()
         app.player.draw()
+        if app.tutorial:
+                drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
+                drawRect(960, 540, 500, 500, align='center', fill=rgb(118, 158, 131))
+                drawImage(app.tutorialText, 960, 540, width=600, height=600, align='center')
 
     ### random mode ###
     elif app.randomMode:
@@ -89,6 +99,14 @@ def redrawAll(app):
             app.player.draw()
             drawLabel(f'{app.timer // app.stepsPerSecond}', 100, 100, size=50)
             drawLabel(f'Collected: {app.player.score}', 1500, 100, size=50)
+            if app.randomTutorial:
+                drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
+                drawLabel('''In this mode, you already have your dash and double-jump abilities!
+                            Use W A S D to move
+                            Dash with E
+                            Jump with spacebar; double-jump by pressing it twice''', 960, 250, size=25)
+                drawLabel('Collect as many crystals as you can before the time runs out!', 960, 500, size=25)
+                drawLabel('Press spacebar to start', 960, 750, size=15)
 
     elif app.randomEndScreen:
         drawLabel('random done', 960, 500, size=75)
@@ -102,37 +120,39 @@ def redrawAll(app):
 
     ### start screen ###
     elif app.startScreen:
-        drawLabel('rendezvous', 960, 250, size=150)
+        drawRect(0, 0, app.width, app.height, fill=rgb(118, 158, 131))
+        drawImage(app.title, 960, 250, width=4723/10, height=631/10, align='center')
         drawLabel('start', 960, 600, size=50)
         drawLabel('random mode', 960, 750, size=50)
 
 def onStep(app):
     ### story mode ###
     if app.gameScreen:
-        app.player.onGround = app.player.doStep(app, app.level)
-        app.cameraDelta = app.camera.scroll(app.level, app.player)
+        if not app.tutorial:
+            app.player.onGround = app.player.doStep(app, app.level)
+            app.cameraDelta = app.camera.scroll(app.level, app.player)
 
-        # portal checks
-        app.level.portal.scroll(app)
-        if len(app.player.collected) == app.level.totalItems - 1:
-            app.level.portal.worldDone = True
-        if app.level.portal.worldDone:
-            app.level.portal.checkCollide(app.player)
-        
-        # item checks
-        for item in app.level.items:
-            item.checkCollide(app.player)
-            app.player.giveAbilities()
-            item.scroll(app)
-        
-        if app.level.index == 2 and app.player.completed:
-            app.gameScreen = False
-            app.endScreen = True
+            # portal checks
+            app.level.portal.scroll(app)
+            if len(app.player.collected) == app.level.totalItems - 1:
+                app.level.portal.worldDone = True
+            if app.level.portal.worldDone:
+                app.level.portal.checkCollide(app.player)
+            
+            # item checks
+            for item in app.level.items:
+                item.checkCollide(app.player)
+                app.player.giveAbilities()
+                item.scroll(app)
+            
+            if app.level.index == 2 and app.player.completed:
+                app.gameScreen = False
+                app.endScreen = True
 
     ### random mode ###
     elif app.randomMode:
         # timer is running
-        if app.timer > 0:
+        if app.timer > 0 and not app.randomTutorial:
             app.timer -= 1
 
             app.player.onGround = app.player.doStepRandom(app, app.randomLevel)
@@ -184,22 +204,29 @@ def onMousePress(app, mouseX, mouseY):
             if 550 <= mouseY <= 650:
                 app.gameScreen = True
                 app.startScreen = False
+                app.tutorial = True
                 app.player.abilities = set()
             elif 700 <= mouseY <= 800:
                 app.randomMode = True
                 app.startScreen = False
+                app.randomTutorial = True
 
-                # random level constantsapp.camera.randomDashScroll(platform, app.player)
+                # random level constants
                 app.randomLevel = RandomLevel()
                 app.timerChoice = -1
                 app.timer = -1
                 app.player.abilities = {'dash', 'double jump'}
-    
+
     elif app.endScreen or app.randomEndScreen:
         reset(app)
 
 def onKeyPress(app, key):
-    if (app.gameScreen or app.randomMode):
+    if app.tutorial or app.randomTutorial:
+        if key == 'space':
+            app.tutorial = False
+            app.randomTutorial = False
+
+    if app.gameScreen or app.randomMode:
         if key == 'space':
             if app.player.onGround:
                 app.player.jump()
