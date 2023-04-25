@@ -5,6 +5,6 @@ Since the beginning of time, the moon has been governed by LOONA, a group of twe
 
 The game also includes a mode where platforms and terrain are randomly generated, a way for players to test their abilities and see how many crystals they can get in certain timeframes.
 ## usage
-The game runs locally and requires the cmu_graphics library, included in this repository.
+The game runs locally and requires the cmu_graphics library.
 
 To run the game, download all the files and run the file named *main.py*
