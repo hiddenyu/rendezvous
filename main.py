@@ -16,11 +16,10 @@ from randomlevel import *
 import math, copy, random
 
 # CHECKLIST :
-# - implement items and scores for random mode
 # - draw sparkling effect for crystals
-# - for random mode, make it so set number of plats
 # - crystal bar in top corner
 # - mana bar for dash?
+# - when dashing in random mode items get displaced
 
 # - remember to change back constants!
 
@@ -40,6 +39,20 @@ def reset(app):
 
     # player constants
     app.player = Player(100, 900)
+
+    # item constants
+    app.itemIcons = [r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal1.png", 
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal2.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal3.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal4.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal5.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal6.png", 
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal7.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal8.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal9.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal10.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal11.png",
+                     r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal12.png"]
 
     # level constants
     app.tileMaps = Tilemaps()
@@ -75,6 +88,7 @@ def redrawAll(app):
             app.randomLevel.draw()
             app.player.draw()
             drawLabel(f'{app.timer // app.stepsPerSecond}', 100, 100, size=50)
+            drawLabel(f'Collected: {app.player.score}', 1500, 100, size=50)
 
     elif app.randomEndScreen:
         drawLabel('random done', 960, 500, size=75)
@@ -117,23 +131,40 @@ def onStep(app):
 
     ### random mode ###
     elif app.randomMode:
+        # timer is running
         if app.timer > 0:
             app.timer -= 1
+
             app.player.onGround = app.player.doStepRandom(app, app.randomLevel)
             app.randCameraDelta = app.camera.randomScroll(app.randomLevel, app.player)
-
             for platform in app.randomLevel.platformList:
                 platform.scroll(app)
             app.randomLevel.generate()
+
+            # if there are not enough platforms
+            if len(app.randomLevel.platformList) <= app.randomLevel.platCount:
+                diff = app.randomLevel.platCount - len(app.randomLevel.platformList)
+                for i in range(diff):
+                    platLength = random.randint(3, 5)
+                    tileSize = app.randomLevel.tileSize
+                    y = random.randint(2, app.randomLevel.height // tileSize)
+                    if app.randomLevel.perlinNoise[y % app.randomLevel.height // tileSize] > app.randomLevel.threshold:
+                        newPlat = Platform(app.randomLevel.width//app.randomLevel.tileSize, y - 1, platLength, tileSize)
+                        app.randomLevel.platformList.append(newPlat)
+            
+            # item checks
+            app.randomLevel.newItems()
+            for item in app.randomLevel.itemList:
+                collided = item.checkCollide(app.player)
+                if collided:
+                    app.randomLevel.itemList.remove(item)
+                item.randomScroll(app)
+            app.player.score = len(app.player.collected)
+        
+        # timer stopped
         elif app.timer != -1:
             app.randomEndScreen = True
             app.randomMode = False
-
-        # # item checks
-        # for item in app.level.items:
-        #     item.checkCollide(app.player)
-        #     app.player.giveAbilities()
-        #     item.scroll(app)
 
 def onMousePress(app, mouseX, mouseY):
     if app.randomMode and app.timerChoice == 0:
@@ -143,7 +174,7 @@ def onMousePress(app, mouseX, mouseY):
             elif 900 <= mouseX <= 1020:
                 app.timerChoice = 60
             elif 1100 <= mouseX <= 1220:
-                app.timeChoice = 120
+                app.timerChoice = 120
         app.timer = app.stepsPerSecond * app.timerChoice
 
     elif app.startScreen:
@@ -182,12 +213,16 @@ def onKeyPress(app, key):
                     app.cameraDelta = app.camera.dashScroll(app.level, app.player)
                     for item in app.level.items:
                         item.dashScroll(app)
-                        app.level.portal.dashScroll(app)
+                    app.level.portal.dashScroll(app)
 
                 elif app.randomMode:
                     app.randCameraDelta = app.camera.randomDashScroll(app.randomLevel, app.player)
                     for platform in app.randomLevel.platformList:
                         platform.dashScroll(app)
+                    for item in app.level.items:
+                        item.randomDashScroll(app)
+        if key == 'r':
+            reset(app)
 
 def onKeyHold(app, keys):
     if (app.gameScreen or app.randomMode):

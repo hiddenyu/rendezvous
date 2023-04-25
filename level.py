@@ -25,27 +25,27 @@ class Level:
         self.items = []
         if self.index == 0:
             start = 1
-            crystal1 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal1.png"
-            crystal2 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal2.png"
-            crystal3 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal3.png"
-            crystal4 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal4.png"
-            crystal5 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal5.png"
+            crystal1 = app.itemIcons[0]
+            crystal2 = app.itemIcons[1]
+            crystal3 = app.itemIcons[2]
+            crystal4 = app.itemIcons[3]
+            crystal5 = app.itemIcons[4]
             self.items = [Item(1200, 960, 1, crystal1), Item(100, 600, 2, crystal2),
                           Item(1400, 240, 3, crystal3), Item(2750, 600, 4, crystal4), Item(3000, 300, 5, crystal5)]
             self.portal = Portal(3600, 240, self.nextWorld)
         elif self.index == 1:
             start = 6
-            crystal6 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal6.png"
-            crystal7 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal7.png"
-            crystal8 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal8.png"
+            crystal6 = app.itemIcons[5]
+            crystal7 = app.itemIcons[6]
+            crystal8 = app.itemIcons[7]
             self.items = [Item(500, 1020, 6, crystal6), Item(1500, 1020, 7, crystal7), Item(3000, 1020, 8, crystal8)]
             self.portal = Portal(3600, 1020, self.nextWorld)
         elif self.index == 2:
             start = 9
-            crystal9 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal9.png"
-            crystal10 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal10.png"
-            crystal11 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal11.png"
-            crystal12 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal12.png"
+            crystal9 = app.itemIcons[8]
+            crystal10 = app.itemIcons[9]
+            crystal11 = app.itemIcons[10]
+            crystal12 = app.itemIcons[11]
             self.items = [Item(750, 1020, 9, crystal9), Item(1000, 1020, 10, crystal10),
                            Item(2000, 1020, 11, crystal11), Item(2750, 1020, 12, crystal12)]
             self.portal = Portal(3600, 1020, self.nextWorld)
