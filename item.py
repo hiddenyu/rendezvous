@@ -25,7 +25,7 @@ class Item:
                     player.collected.add(self.index)
                     collided = True
                     self.isVisible = False
-        return collided
+            return collided
 
     def scroll(self, app):
         self.x -= app.cameraDelta

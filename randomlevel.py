@@ -60,9 +60,8 @@ class RandomLevel:
                 # add a new one
                 platLength = random.randint(3, 5)
                 y = random.randint(0, self.height // self.tileSize)
-                if self.perlinNoise[y % self.height // self.tileSize] > self.threshold:
-                    newPlat = Platform(self.width//self.tileSize, y - 1, platLength, self.tileSize)
-                    self.platformList.append(newPlat)
+                newPlat = Platform(self.width//self.tileSize, y - 1, platLength, self.tileSize)
+                self.platformList.append(newPlat)
 
     def newItems(self):
         diff = self.itemCount - len(self.itemList)

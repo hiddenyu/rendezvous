@@ -18,8 +18,8 @@ import math, copy, random
 # CHECKLIST :
 # - draw sparkling effect for crystals
 # - crystal bar in top corner
-# - mana bar for dash?
 # - when dashing in random mode items get displaced
+# - tutorial! 
 
 # - remember to change back constants!
 
@@ -79,7 +79,7 @@ def redrawAll(app):
 
     ### random mode ###
     elif app.randomMode:
-        if app.timerChoice == 0:
+        if app.timerChoice == -1:
             drawLabel('Choose a time limit', 960, 500, size=75)
             drawLabel('30', 760, 750, size=50)
             drawLabel('60', 960, 750, size=50)
@@ -167,15 +167,17 @@ def onStep(app):
             app.randomMode = False
 
 def onMousePress(app, mouseX, mouseY):
-    if app.randomMode and app.timerChoice == 0:
+    if app.randomMode and app.timerChoice == -1:
         if 650 <= mouseY <= 850:
             if 700 <= mouseX <= 820:
                 app.timerChoice = 30
+                app.timer = app.stepsPerSecond * app.timerChoice
             elif 900 <= mouseX <= 1020:
                 app.timerChoice = 60
+                app.timer = app.stepsPerSecond * app.timerChoice
             elif 1100 <= mouseX <= 1220:
                 app.timerChoice = 120
-        app.timer = app.stepsPerSecond * app.timerChoice
+                app.timer = app.stepsPerSecond * app.timerChoice
 
     elif app.startScreen:
         if 800 <= mouseX <= 1200:
@@ -187,9 +189,9 @@ def onMousePress(app, mouseX, mouseY):
                 app.randomMode = True
                 app.startScreen = False
 
-                # random level constants
+                # random level constantsapp.camera.randomDashScroll(platform, app.player)
                 app.randomLevel = RandomLevel()
-                app.timerChoice = 0
+                app.timerChoice = -1
                 app.timer = -1
                 app.player.abilities = {'dash', 'double jump'}
     
@@ -216,11 +218,13 @@ def onKeyPress(app, key):
                     app.level.portal.dashScroll(app)
 
                 elif app.randomMode:
-                    app.randCameraDelta = app.camera.randomDashScroll(app.randomLevel, app.player)
+                    # app.randCameraDelta = app.camera.randomDashScroll(app.randomLevel, app.player)
                     for platform in app.randomLevel.platformList:
-                        platform.dashScroll(app)
-                    for item in app.level.items:
-                        item.randomDashScroll(app)
+                        # platform.dashScroll(app)
+                        app.camera.randomDashScroll(platform, app.player)
+                    for item in app.randomLevel.itemList:
+                        # item.randomDashScroll(app)
+                        app.randCameraDelta = app.camera.randomDashScroll(item, app.player)
         if key == 'r':
             reset(app)
 
