@@ -73,9 +73,22 @@ def reset(app):
 
     # graphics
     app.tutorialText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions.png"
+    app.tutorialText = CMUImage(Image.open(app.tutorialText))
+
     app.tutorialText2 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions2.png"
+    app.tutorialText2 = CMUImage(Image.open(app.tutorialText2))
+
     app.timeChoiceText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\timechoice.png"
     app.timeChoiceText = CMUImage(Image.open(app.timeChoiceText))
+
+    app.plat3 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\plat3.png"
+    app.plat3 = CMUImage(Image.open(app.plat3))
+
+    app.plat4 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\plat4.png"
+    app.plat4 = CMUImage(Image.open(app.plat4))
+
+    app.plat5 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\plat5.png"
+    app.plat5 = CMUImage(Image.open(app.plat5))
 
 def redrawAll(app):
     ### story mode ###

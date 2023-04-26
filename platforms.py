@@ -56,4 +56,12 @@ class Platform:
         return f'Platform({self.x}, {self.y}, {self.width // self.tileSize})'
 
     def draw(self):
-        drawRect(self.x, self.y, self.width, self.tileSize, fill='blue')
+        length = self.width // self.tileSize
+        if length == 3:
+            drawImage(app.plat3, self.x, self.y)
+        elif length == 4:
+            drawImage(app.plat4, self.x, self.y)
+        elif length == 5:
+            drawImage(app.plat5, self.x, self.y)
+        else:
+            drawRect(self.x, self.y, self.width, self.tileSize, fill='blue')
