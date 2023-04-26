@@ -15,10 +15,7 @@ from camera import *
 from randomlevel import *
 import math, copy, random
 
-# CHECKLIST :
-# - finish graphics!!!
-
-# - remember to change back constants!
+# all graphics are drawn by me
 
 def onAppStart(app):
     reset(app)
