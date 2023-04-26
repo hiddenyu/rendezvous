@@ -29,7 +29,7 @@ class Player:
         self.onGround = False
         self.canDoubleJump = False
 
-        self.sprite = CMUImage(Image.open('test.jpg'))
+        self.sprite = app.sprite
         self.width, self.height = 60, 60
     
     # to animate with sprite strip
@@ -44,6 +44,14 @@ class Player:
     # for gifs, use gif.seek(frame) by looping for frame in range(gif.n_frames)
 
     def draw(self):
+        if self.yVel != 0:
+            self.sprite = app.spriteJump
+        elif self.xVel > 0:
+            self.sprite = app.spriteRun
+        elif self.xVel < 0:
+            self.sprite = app.spriteRunLeft
+        elif almostEqual(self.xVel, 0):
+            self.sprite = app.sprite
         drawImage(self.sprite, self.x, self.y, width=self.width, 
                   height=self.height)
 

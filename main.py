@@ -68,10 +68,21 @@ def reset(app):
     app.camera = Camera(app, 0, 0, app.cameraLeft, app.cameraRight)
 
     # player constants
+    app.sprite = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\char.png"
+    app.sprite = CMUImage(Image.open(app.sprite))
+    app.spriteRun = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\charRun.png"
+    app.spriteRun = CMUImage(Image.open(app.spriteRun))
+    app.spriteRunLeft = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\charRunLeft.png"
+    app.spriteRunLeft = CMUImage(Image.open(app.spriteRunLeft))
+    app.spriteJump = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\charJump.png"
+    app.spriteJump = CMUImage(Image.open(app.spriteJump))
     app.playerRespawn = [100, 900]
     app.player = Player(100, 900)
 
     # graphics
+    app.titleScreen = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\titlescreen.png"
+    app.titleScreen = CMUImage(Image.open(app.titleScreen))
+
     app.tutorialText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions.png"
     app.tutorialText = CMUImage(Image.open(app.tutorialText))
 
@@ -141,7 +152,7 @@ def redrawAll(app):
 
     ### start screen ###
     elif app.startScreen:
-        drawRect(0, 0, app.width, app.height, fill=rgb(118, 158, 131))
+        drawImage(app.titleScreen, 0, 0)
         drawLabel('rendezvous', 960, 400, size=150, font='BaksoSapi', fill='white')
         drawLabel('story mode', 960, 650, size=50, font='BaksoSapi', fill=rgb(206, 223, 212))
         drawLabel('challenge mode', 960, 750, size=50, font='BaksoSapi', fill=rgb(206, 223, 212))
