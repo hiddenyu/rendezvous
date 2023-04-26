@@ -108,6 +108,7 @@ class RandomLevel:
                 self.itemList.remove(item)
 
     def draw(self):
+        drawImage(app.randomLevelBG, 0, 0)
         self.floorPlat.draw()
         for platform in self.platformList:
             platform.draw()

@@ -16,9 +16,8 @@ from randomlevel import *
 import math, copy, random
 
 # CHECKLIST :
-# - draw sparkling effect for crystals
-# - crystal bar in top corner
-# - tutorial! 
+# - finish graphics!!!
+# - crystal bar in top corner?
 
 # - remember to change back constants!
 
@@ -37,6 +36,8 @@ def reset(app):
 
     app.randomMode = False
     app.randomEndScreen = False
+    app.randomLevelBG = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\randomlevel.png"
+    app.randomLevelBG = CMUImage(Image.open(app.randomLevelBG))
 
     # item constants
     app.itemIcons = [r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal1.png", 
@@ -51,6 +52,8 @@ def reset(app):
                      r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal10.png",
                      r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal11.png",
                      r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal12.png"]
+    app.sparkles = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\sparkle.png"
+    app.sparkles = CMUImage(Image.open(app.sparkles))
     app.dashAlert = False
     app.alertSeconds = 3
     app.dashAlertTimer = app.stepsPerSecond * app.alertSeconds
@@ -76,6 +79,8 @@ def reset(app):
     app.title = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\title.png"
     app.tutorialText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions.png"
     app.tutorialText2 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions2.png"
+    app.timeChoiceText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\timechoice.png"
+    app.timeChoiceText = CMUImage(Image.open(app.timeChoiceText))
 
 def redrawAll(app):
     ### story mode ###
@@ -98,14 +103,11 @@ def redrawAll(app):
     ### random mode ###
     elif app.randomMode:
         if app.timerChoice == -1:
-            drawLabel('Choose a time limit', 960, 500, size=75)
-            drawLabel('30', 760, 750, size=50)
-            drawLabel('60', 960, 750, size=50)
-            drawLabel('120', 1160, 750, size=50)
+            drawImage(app.timeChoiceText, 0, 0)
         else:
             app.randomLevel.draw()
             app.player.draw()
-            drawLabel(f'{app.timer // app.stepsPerSecond}', 100, 100, size=50)
+            drawLabel(f'{app.timer // app.stepsPerSecond}', 100, 100, size=50, font='caveat', fill='white')
             drawLabel(f'Collected: {app.player.score}', 1500, 100, size=50)
             if app.randomTutorial:
                 drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
@@ -189,15 +191,15 @@ def onStep(app):
 
 def onMousePress(app, mouseX, mouseY):
     if app.randomMode and app.timerChoice == -1:
-        if 650 <= mouseY <= 850:
-            if 700 <= mouseX <= 820:
+        if 660 <= mouseY <= 780:
+            if 690 <= mouseX <= 810:
                 app.timerChoice = 30
                 app.timer = app.stepsPerSecond * app.timerChoice
             elif 900 <= mouseX <= 1020:
                 app.timerChoice = 60
                 app.timer = app.stepsPerSecond * app.timerChoice
             elif 1100 <= mouseX <= 1220:
-                app.timerChoice = 120
+                app.timerChoice = 90
                 app.timer = app.stepsPerSecond * app.timerChoice
 
     elif app.startScreen:

@@ -41,6 +41,7 @@ class Item:
 
     def draw(self):
         if self.isVisible:
+            drawImage(app.sparkles, self.x - 15, self.y - 15, width=80, height=80)
             drawImage(self.sprite, self.x, self.y, width=self.width, 
                     height=self.height)
     

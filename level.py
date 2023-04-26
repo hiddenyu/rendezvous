@@ -35,16 +35,16 @@ class Level:
                         Item(3660, 720, 11, crystal11), Item(3690, 240, 12, crystal12)]
 
     def draw(self, app):
-        # drawImage(self.sprite, self.x, self.y)
-        rows, cols = len(self.tileMap), len(self.tileMap[0])
-        for row in range(rows):
-            for col in range(cols):
-                xVal = self.x + self.tileSize*col
-                yVal = self.y + self.tileSize*row
+        drawImage(self.sprite, self.x, self.y)
+        # rows, cols = len(self.tileMap), len(self.tileMap[0])
+        # for row in range(rows):
+        #     for col in range(cols):
+        #         xVal = self.x + self.tileSize*col
+        #         yVal = self.y + self.tileSize*row
 
-                # draw tiles
-                if self.tileMap[row][col] == 1:
-                    drawRect(xVal, yVal, self.tileSize, self.tileSize, fill='red')
+        #         # draw tiles
+        #         if self.tileMap[row][col] == 1:
+        #             drawRect(xVal, yVal, self.tileSize, self.tileSize, fill='red')
     
     def __repr__(self):
         return f'Level {self.index}'
