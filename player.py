@@ -17,7 +17,7 @@ class Player:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.load = [x, y]
+        self.load = app.playerRespawn
         self.xVel = 0
         self.yVel = 0
         self.score = 0
@@ -88,6 +88,7 @@ class Player:
 
         if self.y > app.height:
             self.respawn()
+            print(self.x, self.y)
         if self.x <= 0:
             self.x = 0
         if self.x >= app.width - self.width:
@@ -112,8 +113,8 @@ class Player:
             platform.xCollide(self)
         level.floorPlat.xCollide(self)
 
-        # if self.y > app.height:
-        #     self.respawn()
+        if self.y > app.height:
+            self.respawn()
         if self.x <= 0:
             self.x = 0
         if self.x >= app.width - self.width:
@@ -124,8 +125,10 @@ class Player:
     def giveAbilities(self):
         if self.collected == {1, 2, 3, 4, 5}:
             self.abilities.add('dash')
+            app.dashAlert = True
         elif self.collected == {1, 2, 3, 4, 5, 6, 7, 8}:
             self.abilities.add('double jump')
+            app.dJumpAlert = True
         elif self.collected == {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}:
             self.completed = True
     

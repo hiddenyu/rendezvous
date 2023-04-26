@@ -38,9 +38,6 @@ def reset(app):
     app.randomMode = False
     app.randomEndScreen = False
 
-    # player constants
-    app.player = Player(100, 900)
-
     # item constants
     app.itemIcons = [r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal1.png", 
                      r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal2.png",
@@ -54,13 +51,16 @@ def reset(app):
                      r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal10.png",
                      r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal11.png",
                      r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\crystal12.png"]
+    app.dashAlert = False
+    app.alertSeconds = 3
+    app.dashAlertTimer = app.stepsPerSecond * app.alertSeconds
+    app.dJumpAlert = False
+    app.dJumpAlertTimer = app.stepsPerSecond * app.alertSeconds
 
     # level constants
     app.tileMaps = Tilemaps()
     level0 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\level0.png"
-    app.levels = [Level(app.tileMaps.tileMap0, 0, 5, level0), Level(app.tileMaps.tileMap1, 1, 3, level0), 
-                  Level(app.tileMaps.tileMap2, 2, 4, level0)]
-    app.level = app.levels[0]
+    app.level = Level(app.tileMaps.tileMap0, level0)
     app.tileSize = app.level.tileSize
 
     # camera constants
@@ -68,24 +68,32 @@ def reset(app):
     app.cameraRight = app.level.width - app.width - app.cameraLeft
     app.camera = Camera(app, 0, 0, app.cameraLeft, app.cameraRight)
 
+    # player constants
+    app.playerRespawn = [100, 900]
+    app.player = Player(100, 900)
+
     # graphics
     app.title = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\title.png"
     app.tutorialText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions.png"
-    # app.title = CMUImage(Image.open(app.title))
+    app.tutorialText2 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions2.png"
 
 def redrawAll(app):
     ### story mode ###
     if app.gameScreen:
         app.level.draw(app)
-        for i in range(app.level.itemCount):
-            app.level.items[i].draw()
-        if app.level.portal.worldDone:
-            app.level.portal.draw()
+        for item in app.level.items:
+            item.draw()
         app.player.draw()
+
         if app.tutorial:
-                drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
-                drawRect(960, 540, 500, 500, align='center', fill=rgb(118, 158, 131))
-                drawImage(app.tutorialText, 960, 540, width=600, height=600, align='center')
+            drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
+            drawRect(960, 540, 500, 500, align='center', fill=rgb(118, 158, 131))
+            drawImage(app.tutorialText, 960, 540, width=600, height=600, align='center')
+
+        if app.dashAlert and app.dashAlertTimer > 0:
+            drawLabel('You gained dash! Press E to dash!', app.player.x + app.player.width/2, app.player.y - 75, size=15)
+        if app.dJumpAlert and app.dJumpAlertTimer > 0:
+            drawLabel('You gained double-jump! Press space twice to double jump', app.player.x + app.player.width/2, app.player.y - 75, size=15)
 
     ### random mode ###
     elif app.randomMode:
@@ -101,12 +109,8 @@ def redrawAll(app):
             drawLabel(f'Collected: {app.player.score}', 1500, 100, size=50)
             if app.randomTutorial:
                 drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
-                drawLabel('''In this mode, you already have your dash and double-jump abilities!
-                            Use W A S D to move
-                            Dash with E
-                            Jump with spacebar; double-jump by pressing it twice''', 960, 250, size=25)
-                drawLabel('Collect as many crystals as you can before the time runs out!', 960, 500, size=25)
-                drawLabel('Press spacebar to start', 960, 750, size=15)
+                drawRect(960, 540, 500, 500, align='center', fill=rgb(118, 158, 131))
+                drawImage(app.tutorialText2, 960, 540, width=600, height=600, align='center')
 
     elif app.randomEndScreen:
         drawLabel('random done', 960, 500, size=75)
@@ -121,7 +125,7 @@ def redrawAll(app):
     ### start screen ###
     elif app.startScreen:
         drawRect(0, 0, app.width, app.height, fill=rgb(118, 158, 131))
-        drawImage(app.title, 960, 250, width=4723/10, height=631/10, align='center')
+        drawImage(app.title, 960, 450, width=4723/10, height=631/10, align='center')
         drawLabel('start', 960, 600, size=50)
         drawLabel('random mode', 960, 750, size=50)
 
@@ -131,13 +135,6 @@ def onStep(app):
         if not app.tutorial:
             app.player.onGround = app.player.doStep(app, app.level)
             app.cameraDelta = app.camera.scroll(app.level, app.player)
-
-            # portal checks
-            app.level.portal.scroll(app)
-            if len(app.player.collected) == app.level.totalItems - 1:
-                app.level.portal.worldDone = True
-            if app.level.portal.worldDone:
-                app.level.portal.checkCollide(app.player)
             
             # item checks
             for item in app.level.items:
@@ -145,9 +142,13 @@ def onStep(app):
                 app.player.giveAbilities()
                 item.scroll(app)
             
-            if app.level.index == 2 and app.player.completed:
+            if app.player.completed:
                 app.gameScreen = False
                 app.endScreen = True
+        if app.dashAlert and app.dashAlertTimer > 0:
+            app.dashAlertTimer -= 1
+        if app.dJumpAlert and app.dJumpAlertTimer > 0:
+            app.dJumpAlertTimer -= 1
 
     ### random mode ###
     elif app.randomMode:
@@ -182,7 +183,7 @@ def onStep(app):
             app.player.score = len(app.player.collected)
         
         # timer stopped
-        elif app.timer != -1:
+        elif app.timer <= 0 and app.timer != -1:
             app.randomEndScreen = True
             app.randomMode = False
 
@@ -202,11 +203,14 @@ def onMousePress(app, mouseX, mouseY):
     elif app.startScreen:
         if 800 <= mouseX <= 1200:
             if 550 <= mouseY <= 650:
+                # story mode chosen
                 app.gameScreen = True
                 app.startScreen = False
                 app.tutorial = True
                 app.player.abilities = set()
+
             elif 700 <= mouseY <= 800:
+                # random mode chosen
                 app.randomMode = True
                 app.startScreen = False
                 app.randomTutorial = True
@@ -242,15 +246,11 @@ def onKeyPress(app, key):
                     app.cameraDelta = app.camera.dashScroll(app.level, app.player)
                     for item in app.level.items:
                         item.dashScroll(app)
-                    app.level.portal.dashScroll(app)
 
                 elif app.randomMode:
-                    # app.randCameraDelta = app.camera.randomDashScroll(app.randomLevel, app.player)
                     for platform in app.randomLevel.platformList:
-                        # platform.dashScroll(app)
                         app.camera.randomDashScroll(platform, app.player)
                     for item in app.randomLevel.itemList:
-                        # item.randomDashScroll(app)
                         app.randCameraDelta = app.camera.randomDashScroll(item, app.player)
         if key == 'r':
             reset(app)
