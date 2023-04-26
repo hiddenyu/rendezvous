@@ -17,7 +17,6 @@ import math, copy, random
 
 # CHECKLIST :
 # - finish graphics!!!
-# - crystal bar in top corner?
 
 # - remember to change back constants!
 
@@ -76,7 +75,6 @@ def reset(app):
     app.player = Player(100, 900)
 
     # graphics
-    app.title = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\title.png"
     app.tutorialText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions.png"
     app.tutorialText2 = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\instructions2.png"
     app.timeChoiceText = r"C:\Users\wuyj1\Downloads\s23\15112\term project\graphics\timechoice.png"
@@ -88,6 +86,8 @@ def redrawAll(app):
         app.level.draw(app)
         for item in app.level.items:
             item.draw()
+        drawLabel(f'crystals found: {len(app.player.collected)} / 12', 1700, 100, 
+                  font='BaksoSapi', fill=rgb(206, 223, 212), size=25)
         app.player.draw()
 
         if app.tutorial:
@@ -96,9 +96,13 @@ def redrawAll(app):
             drawImage(app.tutorialText, 960, 540, width=600, height=600, align='center')
 
         if app.dashAlert and app.dashAlertTimer > 0:
-            drawLabel('You gained dash! Press E to dash!', app.player.x + app.player.width/2, app.player.y - 75, size=15)
+            drawRect(app.player.x + app.player.width/2, app.player.y - 75, 400, 50, fill=rgb(118, 158, 131), align='center')
+            drawLabel('You gained dash! Press E to dash!', app.player.x + app.player.width/2, 
+                      app.player.y - 75, size=20, font='BaksoSapi', fill=rgb(206, 223, 212))
         if app.dJumpAlert and app.dJumpAlertTimer > 0:
-            drawLabel('You gained double-jump! Press space twice to double jump', app.player.x + app.player.width/2, app.player.y - 75, size=15)
+            drawRect(app.player.x + app.player.width/2, app.player.y - 75, 700, 50, fill=rgb(118, 158, 131), align='center')
+            drawLabel('You gained double jump! Press space twice to double jump', 
+                      app.player.x + app.player.width/2, app.player.y - 75, size=20, font='BaksoSapi', fill=rgb(206, 223, 212))
 
     ### random mode ###
     elif app.randomMode:
@@ -107,29 +111,30 @@ def redrawAll(app):
         else:
             app.randomLevel.draw()
             app.player.draw()
-            drawLabel(f'{app.timer // app.stepsPerSecond}', 100, 100, size=50, font='caveat', fill='white')
-            drawLabel(f'Collected: {app.player.score}', 1500, 100, size=50)
+            drawLabel(f'{app.timer // app.stepsPerSecond}', 100, 100, size=50, font='BaksoSapi', fill='white')
+            drawLabel(f'collected: {app.player.score}', 1700, 100, font='BaksoSapi', fill='white', size=50)
             if app.randomTutorial:
                 drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
                 drawRect(960, 540, 500, 500, align='center', fill=rgb(118, 158, 131))
                 drawImage(app.tutorialText2, 960, 540, width=600, height=600, align='center')
 
     elif app.randomEndScreen:
-        drawLabel('random done', 960, 500, size=75)
-        drawLabel(f'Score: {app.player.score}', 960, 750, size=50)
-        drawLabel('click to restart', 960, 900, size=25)
+        drawRect(0, 0, app.width, app.height, fill=rgb(118, 158, 131))
+        drawLabel(f'you collected {app.player.score} crystals!', 960, 540, size=75, font='BaksoSapi', fill=rgb(206, 223, 212))
+        drawLabel('click anywhere to restart', 960, 750, font='BaksoSapi', size=25, fill=rgb(206, 223, 212))
 
     ### end screen ###
     elif app.endScreen:
-        drawLabel('finished', 960, 500, size=75)
-        drawLabel('click to restart', 960, 900, size=25)
+        drawRect(0, 0, app.width, app.height, fill=rgb(118, 158, 131))
+        drawLabel('you reunited LOONA!', 960, 540, size=75, font='BaksoSapi', fill=rgb(206, 223, 212))
+        drawLabel('click anywhere to restart', 960, 750, size=25, font='BaksoSapi', fill=rgb(206, 223, 212))
 
     ### start screen ###
     elif app.startScreen:
         drawRect(0, 0, app.width, app.height, fill=rgb(118, 158, 131))
-        drawImage(app.title, 960, 450, width=4723/10, height=631/10, align='center')
-        drawLabel('start', 960, 600, size=50)
-        drawLabel('random mode', 960, 750, size=50)
+        drawLabel('rendezvous', 960, 400, size=150, font='BaksoSapi', fill='white')
+        drawLabel('story mode', 960, 650, size=50, font='BaksoSapi', fill=rgb(206, 223, 212))
+        drawLabel('challenge mode', 960, 750, size=50, font='BaksoSapi', fill=rgb(206, 223, 212))
 
 def onStep(app):
     ### story mode ###
@@ -203,8 +208,8 @@ def onMousePress(app, mouseX, mouseY):
                 app.timer = app.stepsPerSecond * app.timerChoice
 
     elif app.startScreen:
-        if 800 <= mouseX <= 1200:
-            if 550 <= mouseY <= 650:
+        if 760 <= mouseX <= 1160:
+            if 600 <= mouseY <= 700:
                 # story mode chosen
                 app.gameScreen = True
                 app.startScreen = False

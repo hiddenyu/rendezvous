@@ -95,9 +95,9 @@ class RandomLevel:
                         newItem = Item(itemX, platform.y, RandomLevel.itemsCollected, icon)
             
             # # check if new item is close to existing one
-            # for item in self.itemList:
-            #     if abs(newItem.x - item.x) < 250 and newItem.y == item.y:
-            #         self.itemList.remove(item)
+            for item in self.itemList:
+                if abs(newItem.x - item.x) < 100 and newItem.y == item.y:
+                    self.itemList.remove(item)
 
             self.itemList.append(newItem)
             RandomLevel.itemsCollected += 1
