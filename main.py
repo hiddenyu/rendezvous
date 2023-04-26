@@ -13,7 +13,7 @@ from tilemaps import *
 from platforms import *
 from camera import *
 from randomlevel import *
-import math, copy, random
+import os, pathlib, random
 
 # all graphics are drawn by me
 
@@ -115,6 +115,7 @@ def redrawAll(app):
             drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
             drawRect(960, 540, 500, 500, align='center', fill=rgb(118, 158, 131))
             drawImage(app.tutorialText, 960, 540, width=600, height=600, align='center')
+            drawLabel('press r to reset anytime!', 960, 700, fill=rgb(38,38,38), font='BaksoSapi', size=15.5)
 
         if app.dashAlert and app.dashAlertTimer > 0:
             drawRect(app.player.x + app.player.width/2, app.player.y - 75, 400, 50, fill=rgb(118, 158, 131), align='center')
@@ -138,6 +139,7 @@ def redrawAll(app):
                 drawRect(0, 0, app.width, app.height, fill='black', opacity=50)
                 drawRect(960, 540, 500, 500, align='center', fill=rgb(118, 158, 131))
                 drawImage(app.tutorialText2, 960, 540, width=600, height=600, align='center')
+                drawLabel('press r to reset anytime!', 960, 700, fill=rgb(38,38,38), font='BaksoSapi', size=15.5)
 
     elif app.randomEndScreen:
         drawRect(0, 0, app.width, app.height, fill=rgb(118, 158, 131))

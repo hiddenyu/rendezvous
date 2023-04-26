@@ -109,7 +109,7 @@ class RandomLevel:
 
     def draw(self):
         drawImage(app.randomLevelBG, 0, 0)
-        self.floorPlat.draw()
+        # self.floorPlat.draw()
         for platform in self.platformList:
             platform.draw()
         for item in self.itemList:
