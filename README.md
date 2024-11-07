@@ -1,6 +1,8 @@
 # rendezvous
 Since the beginning of time, the moon has been governed by LOONA, a group of twelve girls, since the beginning  of time. However, when all twelve girls go missing, it is up to a young star, Orbit, to regather the missing girls and use their powers to restore balance to the world.
 ## overview
+Watch the demo video here: https://youtu.be/R9kL7gVnVCY
+
 *rendezvous* is a platformer inspired by the storyline of the k-pop girl group, LOONA. It involves the player, named Orbit, collecting twelve colored crystals to complete the game, through jumping on platformers, learning new abilities, and exploring different worlds.
 
 The game also includes a mode where platforms and terrain are randomly generated, a way for players to test their abilities and see how many crystals they can get in certain timeframes.
